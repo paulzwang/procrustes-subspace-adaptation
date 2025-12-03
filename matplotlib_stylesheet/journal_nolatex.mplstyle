@@ -1,0 +1,59 @@
+### Figure ###
+# figure.figsize : 3.25, 2.75  # Figure size in inches (single column)
+figure.figsize : 7.0, 5.5 # Figure size in inches (full page), change second number if its side by side plots
+figure.dpi : 300.0 # Only matters for .png
+
+### General fonts ###
+font.family : serif
+font.serif : cmr10
+font.sans-serif : cmss10
+font.monospace : cmtt10
+font.size : 10
+
+### Math fonts ###
+mathtext.fontset : cm
+mathtext.rm : cm
+mathtext.it : cm:italic
+mathtext.bf : cm:bold
+
+### Axes ###
+axes.axisbelow : True
+axes.linewidth : 0.5
+axes.formatter.use_mathtext : True
+axes.titlesize : 10
+axes.labelsize : 10
+
+### Ticks ###
+xtick.direction : in # Personal preference
+xtick.labelsize : 8
+xtick.major.width : 0.05
+xtick.major.size : 2
+xtick.minor.visible : True
+xtick.minor.width : 0.05
+xtick.minor.size : 1
+ytick.direction : in # Personal preference
+ytick.labelsize : 8
+ytick.major.width : 0.05
+ytick.major.size : 2
+ytick.minor.visible : True
+ytick.minor.width : 0.05
+ytick.minor.size : 1
+
+### Legend ###
+legend.fontsize : 8
+legend.framealpha : 1.0
+legend.edgecolor : 0.8
+
+### Lines ###
+lines.linewidth : 0.7
+lines.markersize : 4.5
+lines.markeredgewidth : 0.7
+
+### Error Bars ###
+errorbar.capsize : 1.5
+
+### Grid ###
+axes.grid : True # Personal preference
+grid.linestyle : --
+grid.linewidth : 0.25
+grid.alpha : 0.7
