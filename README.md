@@ -19,5 +19,5 @@ This repository contains Python code used to demonstrate the results presented i
 - The folder `models` contains saved PyTorch model weights and biases as `.pt` files for the baseline neural network and the subspace adapted network. The input layer size, output layer size, number of layers, number of neurons, and hidden layer size are saved under `model_settings.txt` files in the `models` folder.
 
 ## Usage
-1. Python is required to run all code. Install all packages in `requirements.txt` into the Python environment.
-2. Run `single_shift_demo.py` or `increasing_shift_demo.py` to produce results, which can be found in the `plots` folder as PDFs.
+1. Python is required to run all code. Install all packages in `requirements.txt` into the Python environment. Note that PyTorch was installed with CUDA 13.0 as the compute platform. If your machine does not have CUDA capability (i.e., no GPU), change `torch==2.9.1+cu130` and `torchvision==0.24.1+cu130` to `torch==2.9.1` and `torchvision==0.24.1` in `requirements.txt` before installing from requirements.
+2. Run `single_shift_demo.py` or `increasing_shift_demo.py` to produce results. Result plots can be found in the `plots` folder as PDFs.
