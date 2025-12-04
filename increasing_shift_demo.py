@@ -236,7 +236,7 @@ if __name__ == '__main__':
         if i == len(inputdomain_list)-1:
             ax3[i,2].set_xlabel('Molecular\n Speed Ratio',labelpad=5,fontsize=9)
 
-    fig0.savefig('increasing_shifts_dataviz.pdf', format='pdf', bbox_inches='tight')
-    fig1.savefig('increasing_shifts_heatratevstime.pdf', format='pdf')
-    fig2.savefig('increasing_shifts_statespacecomparison.pdf', format='pdf', bbox_inches='tight')
-    fig3.savefig('increasing_shifts_statespaceprediction.pdf', format='pdf')
+    fig0.savefig('plots/increasing_shifts_dataviz.pdf', format='pdf', bbox_inches='tight')
+    fig1.savefig('plots/increasing_shifts_heatratevstime.pdf', format='pdf')
+    fig2.savefig('plots/increasing_shifts_statespacecomparison.pdf', format='pdf', bbox_inches='tight')
+    fig3.savefig('plots/increasing_shifts_statespaceprediction.pdf', format='pdf')

@@ -5,16 +5,16 @@ from scipy.interpolate import make_interp_spline
 import scipy.linalg as linalg
 from scipy.linalg import orth
 
-def interpolate_inputs(Xs,Xt,ts,tt):
+def interpolate_inputs(X,Z,ts,tt):
     if len(ts) > len(tt):
-        bs = make_interp_spline(ts,Xs)
-        Xs_interp = bs(tt)
-        Xt_interp = Xt
+        bs = make_interp_spline(ts,X)
+        X_interp = bs(tt)
+        Z_interp = Z
     else:
-        bt = make_interp_spline(tt,Xt) 
-        Xs_interp = Xs
-        Xt_interp = bt(ts)
-    return Xs_interp, Xt_interp
+        bt = make_interp_spline(tt,Z) 
+        X_interp = X
+        Z_interp = bt(ts)
+    return X_interp, Z_interp
 
 def find_trajectory_matrix(time_series,window_length):
     """
@@ -38,7 +38,7 @@ def H_to_TS(X_i):
     X_rev = X_i[::-1]
     return np.array([X_rev.diagonal(i).mean() for i in range(-X_i.shape[0]+1, X_i.shape[1])])
 
-def procrustes_manifold_alignment(Xs, Xt, Ys, Yt, ts, tt, window_length, k=5, rotation=True, scaling=True):
+def procrustes_manifold_alignment(X, Z, Ys, Yt, ts, tt, window_length, k=5, rotation=True, scaling=True):
     # Set training device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -46,63 +46,63 @@ def procrustes_manifold_alignment(Xs, Xt, Ys, Yt, ts, tt, window_length, k=5, ro
 
     # Mean center and scale data to unit variance
     scaler = StandardScaler(with_std=True)
-    Xs = scaler.fit_transform(Xs)
-    Xt = scaler.fit_transform(Xt)
+    X = scaler.fit_transform(X)
+    Z = scaler.fit_transform(Z)
 
     # Interpolate inputs
-    Xs_interp, Xt_interp = interpolate_inputs(Xs,Xt,ts,tt)
+    X_interp, Z_interp = interpolate_inputs(X,Z,ts,tt)
 
     # Inputs are in the column space of X
-    for i in range(0,np.size(Xs,1)):
-        Hs_Li = torch.tensor(find_trajectory_matrix(Xs_interp[:,i],L),dtype=torch.float32).to(device)
-        Ht_Li = torch.tensor(find_trajectory_matrix(Xt_interp[:,i],L),dtype=torch.float32).to(device)
-        Hsi = torch.tensor(find_trajectory_matrix(Xs[:,i],L),dtype=torch.float32).to(device)
-        Hti = torch.tensor(find_trajectory_matrix(Xt[:,i],L),dtype=torch.float32).to(device)
+    for i in range(0,np.size(X,1)):
+        Hx_Li = torch.tensor(find_trajectory_matrix(X_interp[:,i],L),dtype=torch.float32).to(device)
+        Hz_Li = torch.tensor(find_trajectory_matrix(Z_interp[:,i],L),dtype=torch.float32).to(device)
+        Hxi = torch.tensor(find_trajectory_matrix(X[:,i],L),dtype=torch.float32).to(device)
+        Hzi = torch.tensor(find_trajectory_matrix(Z[:,i],L),dtype=torch.float32).to(device)
 
         # Stack Hankel matrices. Two sets of stacks are generated; one for linked data and one for the full datasets.
         # Linked data is used to find rotation matrix.
         if i==0:
-            Hs_L = Hs_Li
-            Ht_L = Ht_Li
-            Hs = Hsi
-            Ht = Hti
+            Hx_L = Hx_Li
+            Hz_L = Hz_Li
+            Hx = Hxi
+            Hz = Hzi
         else:
-            Hs_L = torch.cat((Hs_L,Hs_Li),dim=0)
-            Ht_L = torch.cat((Ht_L,Ht_Li),dim=0)
-            Hs = torch.cat((Hs,Hsi),dim=0)
-            Ht = torch.cat((Ht,Hti),dim=0)
+            Hx_L = torch.cat((Hx_L,Hx_Li),dim=0)
+            Hz_L = torch.cat((Hz_L,Hz_Li),dim=0)
+            Hx = torch.cat((Hx,Hxi),dim=0)
+            Hz = torch.cat((Hz,Hzi),dim=0)
 
-    Us,_,_ = torch.linalg.svd(Hs_L)
-    Ut,_,_ = torch.linalg.svd(Ht_L)
-    Hs_sub = Us[:,0:k]# Us[:,0:5]
-    Ht_sub = Ut[:,0:k]
+    Us,_,_ = torch.linalg.svd(Hx_L)
+    Ut,_,_ = torch.linalg.svd(Hz_L)
+    Hx_sub = Us[:,0:k]# Us[:,0:5]
+    Hz_sub = Ut[:,0:k]
 
-    Hs_proj = Hs_sub.T @ Hs_L
-    Ht_proj = Ht_sub.T @ Ht_L
+    Hx_proj = Hx_sub.T @ Hx_L
+    Hz_proj = Hz_sub.T @ Hz_L
 
-    U,S,V = torch.linalg.svd(Hs_proj @ Ht_proj.T)
+    U,S,V = torch.linalg.svd(Hx_proj @ Hz_proj.T)
     Q = V.T @ U.T
-    s = torch.trace(torch.diag(S))/torch.trace(Hs_proj @ Hs_proj.T)
+    s = torch.trace(torch.diag(S))/torch.trace(Hx_proj @ Hx_proj.T)
 
     if rotation and scaling:
-        Xsa = s * Q @ (Hs_sub.T @ Hs)
+        Xa = s * Q @ (Hx_sub.T @ Hx)
     elif not rotation and scaling:
-        Xsa = s * (Hs_sub.T @ Hs)
+        Xa = s * (Hx_sub.T @ Hx)
     elif rotation and not scaling:
-        Xsa = Q @ (Hs_sub.T @ Hs)
+        Xa = Q @ (Hx_sub.T @ Hx)
     elif not rotation and not scaling:
-        Xsa = Hs_sub.T @ Hs
+        Xa = Hx_sub.T @ Hx
     else:
-        Xsa = s * Q @ (Hs_sub.T @ Hs)
+        Xa = s * Q @ (Hx_sub.T @ Hx)
 
-    Xta = Ht_sub.T @ Ht
-    Xsa = Xsa.T
-    Xta = Xta.T
+    Za = Hz_sub.T @ Hz
+    Xa = Xa.T
+    Za = Za.T
     # Hankelise outputs
     Ys_H = find_trajectory_matrix(Ys,L)
     Yt_H = find_trajectory_matrix(Yt,L)
 
-    return Xsa.cpu().detach().numpy(), Xta.cpu().detach().numpy(), Ys_H.T, Yt_H.T
+    return Xa.cpu().detach().numpy(), Za.cpu().detach().numpy(), Ys_H.T, Yt_H.T
 
 def ojas(Y, Uhat, U, eta=0.5):
     """
@@ -145,7 +145,7 @@ def ojas(Y, Uhat, U, eta=0.5):
 
     return Uhat, np.array(errors)
 
-def streaming_procrustes_manifold_alignment(Xs, Xt, Ys, Yt, ts, tt, window_length, k=5, rotation=True, scaling=True):
+def streaming_procrustes_manifold_alignment(X, Z, Ys, Yt, ts, tt, window_length, k=5, rotation=True, scaling=True):
     # Set training device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -153,65 +153,65 @@ def streaming_procrustes_manifold_alignment(Xs, Xt, Ys, Yt, ts, tt, window_lengt
 
     # Mean center and scale data to unit variance
     scaler = StandardScaler(with_std=True)
-    Xs = scaler.fit_transform(Xs)
-    Xt = scaler.fit_transform(Xt)
+    X = scaler.fit_transform(X)
+    Z = scaler.fit_transform(Z)
 
     # Interpolate inputs
-    Xs_interp, Xt_interp = interpolate_inputs(Xs,Xt,ts,tt)
+    X_interp, Z_interp = interpolate_inputs(X,Z,ts,tt)
 
     # Inputs are in the column space of X
-    for i in range(0,np.size(Xs,1)):
-        Hs_Li = torch.tensor(find_trajectory_matrix(Xs_interp[:,i],L),dtype=torch.float32).to(device)
-        Ht_Li = torch.tensor(find_trajectory_matrix(Xt_interp[:,i],L),dtype=torch.float32).to(device)
-        Hsi = torch.tensor(find_trajectory_matrix(Xs[:,i],L),dtype=torch.float32).to(device)
-        Hti = torch.tensor(find_trajectory_matrix(Xt[:,i],L),dtype=torch.float32).to(device)
+    for i in range(0,np.size(X,1)):
+        Hx_Li = torch.tensor(find_trajectory_matrix(X_interp[:,i],L),dtype=torch.float32).to(device)
+        Hz_Li = torch.tensor(find_trajectory_matrix(Z_interp[:,i],L),dtype=torch.float32).to(device)
+        Hxi = torch.tensor(find_trajectory_matrix(X[:,i],L),dtype=torch.float32).to(device)
+        Hzi = torch.tensor(find_trajectory_matrix(Z[:,i],L),dtype=torch.float32).to(device)
 
         # Stack Hankel matrices. Two sets of stacks are generated; one for linked data and one for the full datasets.
         # Linked data is used to find rotation matrix.
         if i==0:
-            Hs_L = Hs_Li
-            Ht_L = Ht_Li
-            Hs = Hsi
-            Ht = Hti
+            Hx_L = Hx_Li
+            Hz_L = Hz_Li
+            Hx = Hxi
+            Hz = Hzi
         else:
-            Hs_L = torch.cat((Hs_L,Hs_Li),dim=0)
-            Ht_L = torch.cat((Ht_L,Ht_Li),dim=0)
-            Hs = torch.cat((Hs,Hsi),dim=0)
-            Ht = torch.cat((Ht,Hti),dim=0)
+            Hx_L = torch.cat((Hx_L,Hx_Li),dim=0)
+            Hz_L = torch.cat((Hz_L,Hz_Li),dim=0)
+            Hx = torch.cat((Hx,Hxi),dim=0)
+            Hz = torch.cat((Hz,Hzi),dim=0)
 
-    Us,_,_ = torch.linalg.svd(Hs) # Change this line to use Hs
-    Ut,_,_ = torch.linalg.svd(Ht_L)
-    Hs_sub = Us[:,0:k]# Us[:,0:5]
+    Us,_,_ = torch.linalg.svd(Hx) # Change this line to use Hx
+    Ut,_,_ = torch.linalg.svd(Hz_L)
+    Hx_sub = Us[:,0:k]# Us[:,0:5]
     
     # Target domain subspace streaming
-    Uhat = linalg.orth(np.random.randn(Hs_sub.shape[0],Hs_sub.shape[1]))
+    Uhat = linalg.orth(np.random.randn(Hx_sub.shape[0],Hx_sub.shape[1]))
     Utrue = Ut[:,0:k]
-    Ht_sub,_ = ojas(Ht_L.T.cpu().detach().numpy(),Uhat,Utrue.cpu().detach().numpy())
-    Ht_sub = torch.tensor(Ht_sub,dtype=torch.float32).to(device)
+    Hz_sub,_ = ojas(Hz_L.T.cpu().detach().numpy(),Uhat,Utrue.cpu().detach().numpy())
+    Hz_sub = torch.tensor(Hz_sub,dtype=torch.float32).to(device)
 
-    Hs_proj = Hs_sub.T @ Hs_L
-    Ht_proj = Ht_sub.T @ Ht_L
+    Hx_proj = Hx_sub.T @ Hx_L
+    Hz_proj = Hz_sub.T @ Hz_L
 
-    U,S,V = torch.linalg.svd(Hs_proj @ Ht_proj.T)
+    U,S,V = torch.linalg.svd(Hx_proj @ Hz_proj.T)
     Q = V.T @ U.T
-    s = torch.trace(torch.diag(S))/torch.trace(Hs_proj @ Hs_proj.T)
+    s = torch.trace(torch.diag(S))/torch.trace(Hx_proj @ Hx_proj.T)
 
     if rotation and scaling:
-        Xsa = s * Q @ (Hs_sub.T @ Hs)
+        Xa = s * Q @ (Hx_sub.T @ Hx)
     elif not rotation and scaling:
-        Xsa = s * (Hs_sub.T @ Hs)
+        Xa = s * (Hx_sub.T @ Hx)
     elif rotation and not scaling:
-        Xsa = Q @ (Hs_sub.T @ Hs)
+        Xa = Q @ (Hx_sub.T @ Hx)
     elif not rotation and not scaling:
-        Xsa = Hs_sub.T @ Hs
+        Xa = Hx_sub.T @ Hx
     else:
-        Xsa = s * Q @ (Hs_sub.T @ Hs)
+        Xa = s * Q @ (Hx_sub.T @ Hx)
 
-    Xta = Ht_sub.T @ Ht
-    Xsa = Xsa.T
-    Xta = Xta.T
+    Za = Hz_sub.T @ Hz
+    Xa = Xa.T
+    Za = Za.T
     # Hankelise outputs
     Ys_H = find_trajectory_matrix(Ys,L)
     Yt_H = find_trajectory_matrix(Yt,L)
 
-    return Xsa.cpu().detach().numpy(), Xta.cpu().detach().numpy(), Ys_H.T, Yt_H.T
+    return Xa.cpu().detach().numpy(), Za.cpu().detach().numpy(), Ys_H.T, Yt_H.T

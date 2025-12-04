@@ -14,7 +14,6 @@ from sklearn.preprocessing import StandardScaler
 if __name__ == '__main__':
     # rp is different between missions
     # mission1_data_directory = r'data\10orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
-    # mission1_data_directory = r'data\10orbit_ra=12000_rp=95.0\Results_ctrl=0_ra=12000_rp=95.0_hl=0.150_90.0deg.csv'
     mission1_data_directory = r'data\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
     
     # mission2_data_directory = r'data\4orbit_ra=12000_rp=99.0\Results_ctrl=0_ra=12000_rp=99.0_hl=0.150_90.0deg.csv'
@@ -233,7 +232,7 @@ if __name__ == '__main__':
     ax1[1,1].set_xlabel('Time Step')
     ax1[1,1].set_ylabel('Heat Rate (W/cm$^2$)')
     ax1[1,1].legend(fontsize=6.25,framealpha=0.5)
-    fig1.savefig('heatrate_vs_time.pdf', format='pdf')
+    fig1.savefig('plots/heatrate_vs_time.pdf', format='pdf')
 
     # Plotting state space in source domain
     fig2, ax2 = plt.subplots(2,3,width_ratios=[1,1,1]) # number of width ratios must match the number of columns of the grid
@@ -274,7 +273,7 @@ if __name__ == '__main__':
     # ax2[1,2].scatter(df2['S'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
     ax2[1,2].scatter(df2['S'][0:index_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax2[1,2].set_xlabel('Molecular Speed Ratio',labelpad=15)
-    fig2.savefig('state_space.pdf', format='pdf')
+    fig2.savefig('plots/state_space.pdf', format='pdf')
 
     # Plotting state space in target domain
     fig3, ax3 = plt.subplots(1,4,width_ratios=[1,1,1,1],figsize=(7,1.5)) # number of width ratios must match the number of columns of the grid
@@ -318,4 +317,4 @@ if __name__ == '__main__':
     # ax3[1,2].scatter(df2['S'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
     ax3[3].scatter(df2['S'][0:index_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax3[3].set_xlabel('Molecular\n Speed Ratio',labelpad=15)
-    fig3.savefig('actualpred_state_space.pdf', format='pdf', bbox_inches='tight')
+    fig3.savefig('plots/actualpred_state_space.pdf', format='pdf', bbox_inches='tight')
