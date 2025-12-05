@@ -7,7 +7,7 @@ This repository contains Python code used to demonstrate the results presented i
 ## Content 
 ### Demo Files
 - `single_shift_demo.py` contains code to run Procrustes subspace adaptation for a single domain shift (i.e., a shift downwards in the aerobraking orbit periapsis).
-- `increasing_shift_demo.py` contains code to run Procrustes subspace adaptation on multiple domain shifts (i.e., multiple shifts in periapsis).
+- `increasing_shift_demo.py` contains code that showcases Procrustes subspace adaptation on multiple domain shifts.
 - `tutorial.ipynb` is a Python notebook that gives a step-by-step tutorial on the subspace adaptation learning algorithm. [This is a work in progress]
 
 ### Functions

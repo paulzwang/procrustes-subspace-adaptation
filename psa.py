@@ -6,6 +6,9 @@ import scipy.linalg as linalg
 from scipy.linalg import orth
 
 def interpolate_inputs(X,Z,ts,tt):
+    """
+    Interpolate two input vectors wrt to time vector, with interpolation performed on larger array
+    """
     if len(ts) > len(tt):
         bs = make_interp_spline(ts,X)
         X_interp = bs(tt)
@@ -18,8 +21,7 @@ def interpolate_inputs(X,Z,ts,tt):
 
 def find_trajectory_matrix(time_series,window_length):
     """
-    Function to construct a trajectory matrix with Hankel matrix structure.
-    Time series must be a vector (1D array).
+    Transform 1D input time series into a trajectory matrix
     """
     L = window_length # The window length.
     N = len(time_series)
@@ -31,14 +33,16 @@ def find_trajectory_matrix(time_series,window_length):
 
 def H_to_TS(X_i):
     """
-    "De-Hankelises" an input matrix, returning the original time series.
-    Averages the anti-diagonals of the given elementary matrix, X_i, and returns a time series.
+    Reconstructs input time series from trajectory matrix
     """
     # Reverse the column ordering of X_i
     X_rev = X_i[::-1]
     return np.array([X_rev.diagonal(i).mean() for i in range(-X_i.shape[0]+1, X_i.shape[1])])
 
-def procrustes_manifold_alignment(X, Z, Ys, Yt, ts, tt, window_length, k=5, rotation=True, scaling=True):
+def batch_procrustes_subspace_adaptation(X, Z, Ys, Yt, ts, tt, window_length, k=5, rotation=True, scaling=True):
+    """
+    Procrustes subspace adaptation with full domain seen. Operational subspace found by PCA (SVD of the input matrix Z)
+    """
     # Set training device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -106,23 +110,9 @@ def procrustes_manifold_alignment(X, Z, Ys, Yt, ts, tt, window_length, k=5, rota
 
 def ojas(Y, Uhat, U, eta=0.5):
     """
-    Oja's algorithm for subspace tracking.
-    
-    Parameters:
-    Y : array-like, shape (n_samples, n_features)
-        The input data matrix where each row is a data point.
-    U : array-like, shape (n_features, k)
-        The initial estimate of the subspace (orthonormal basis).
-    eta : float
-        The learning rate.
-        
-    Returns:
-    errors : list
-        List of subspace estimation errors at each step.
-    times : list
-        List of cumulative times at each step.
+    Oja's algorithm for subspace tracking
+    Y is the streamed data, U is the true subspace, and Uhat is the streaming estimate
     """
-
     n_samples, n_features = Y.shape
     
     errors = []
@@ -145,7 +135,10 @@ def ojas(Y, Uhat, U, eta=0.5):
 
     return Uhat, np.array(errors)
 
-def streaming_procrustes_manifold_alignment(X, Z, Ys, Yt, ts, tt, window_length, k=5, rotation=True, scaling=True):
+def streaming_procrustes_subspace_adaptation(X, Z, Ys, Yt, ts, tt, window_length, k=5, rotation=True, scaling=True):
+    """
+    Procrustes subspace adaptation with streaming domain. Operational subspace is found by Oja's algorithm using partially streamed Z
+    """
     # Set training device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     

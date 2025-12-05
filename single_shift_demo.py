@@ -73,8 +73,8 @@ if __name__ == '__main__':
     #=======================================================================================#
     # Subspace Alignment
     #=======================================================================================#
-    Xsa, Xta, Ys, Yt = psa.procrustes_manifold_alignment(X1,X2,Y1,Y2,t1,t2,window_length=50,k=5)
-    Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_manifold_alignment(X1,X2_seen,Y1,Y2_seen,t1,t2_seen,window_length=5,k=5) # Note that streaming performs better with smaller window size 
+    Xsa, Xta, Ys, Yt = psa.batch_procrustes_subspace_adaptation(X1,X2,Y1,Y2,t1,t2,window_length=50,k=5)
+    Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1,X2_seen,Y1,Y2_seen,t1,t2_seen,window_length=5,k=5) # Note that streaming performs better with smaller window size 
 
     #=======================================================================================#
     # Data Preprocessing
