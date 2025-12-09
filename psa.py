@@ -26,9 +26,7 @@ def find_trajectory_matrix(time_series,window_length):
     L = window_length # The window length.
     N = len(time_series)
     K = N - L + 1 # The number of columns in the trajectory matrix.
-    # Create the trajectory matrix by pulling the relevant subseries of F, and stacking them as columns
     X = np.column_stack([time_series[i:i+L] for i in range(0,K)])
-    # Note: the i+L above gives us up to i+L-1, as numpy array upper bounds are exclusive.
     return X
 
 def H_to_TS(X_i):
@@ -78,7 +76,7 @@ def batch_procrustes_subspace_adaptation(X, Z, Ys, Yt, ts, tt, window_length, k=
 
     Us,_,_ = torch.linalg.svd(Hx_L)
     Ut,_,_ = torch.linalg.svd(Hz_L)
-    Hx_sub = Us[:,0:k]# Us[:,0:5]
+    Hx_sub = Us[:,0:k]
     Hz_sub = Ut[:,0:k]
 
     Hx_proj = Hx_sub.T @ Hx_L
@@ -172,9 +170,9 @@ def streaming_procrustes_subspace_adaptation(X, Z, Ys, Yt, ts, tt, window_length
             Hx = torch.cat((Hx,Hxi),dim=0)
             Hz = torch.cat((Hz,Hzi),dim=0)
 
-    Us,_,_ = torch.linalg.svd(Hx) # Change this line to use Hx
+    Us,_,_ = torch.linalg.svd(Hx)
     Ut,_,_ = torch.linalg.svd(Hz_L)
-    Hx_sub = Us[:,0:k]# Us[:,0:5]
+    Hx_sub = Us[:,0:k]
     
     # Target domain subspace streaming
     Uhat = linalg.orth(np.random.randn(Hx_sub.shape[0],Hx_sub.shape[1]))
