@@ -164,6 +164,7 @@ fig5.tight_layout()
 # Calculate contribution of each principal component
 sigma_sumsq = (Ss**2).sum()
 print(Ss**2 / sigma_sumsq * 100) 
+plt.figure()
 plt.plot(Ss**2 / sigma_sumsq * 100)
 plt.xlabel('Component Number')
 plt.ylabel('Explained Variance')
@@ -230,38 +231,38 @@ lproj1_reshaped = Xa.reshape(-1,colnum)
 lproj2_reshaped = Za.reshape(-1,colnum)
 
 datasets = [sproj1_reshaped, sproj2_reshaped, lproj1_reshaped, lproj2_reshaped]
+titles = ['Subspace Projection of Source Domain',
+          'Subspace Projection of Target Domain',
+          'Aligned Subspace Projection of Source Domain',
+          'Aligned Subspace Projection of Target Domain',
+          ]
 # create a single norm to be shared across all images
 norm = colors.Normalize(vmin=np.min(datasets), vmax=np.max(datasets))
-
-fig, axs = plt.subplots(2, 2)
-fig.suptitle('Multiple images')
-
+fig6, ax6 = plt.subplots(2,2)
+fig6.suptitle('Comparison of Subspace and Aligned Subspace Projections')
 images = []
-for ax, data in zip(axs.flat, datasets):
+i = 0
+for ax, data in zip(ax6.flat, datasets):
     images.append(ax.matshow(data, norm=norm))
+    ax.set_title(titles[i])
+    i = i + 1
+fig6.colorbar(images[0], ax=ax6, orientation='vertical', shrink=0.9, fraction=.1)
 
-fig.colorbar(images[0], ax=axs, orientation='horizontal', fraction=.1)
-
-# plt.show()
+""" Plotting Discrepancy Between Subspace and Latent Space """
+fig7, ax7 = plt.subplots(1,2)
+datasets = [np.abs(sproj1_reshaped - sproj2_reshaped), np.abs(lproj1_reshaped - lproj2_reshaped)]
+titles = ['Subspace Discrepancy', 'Latent Space Discrepancy']
+# create a single norm to be shared across all images
+norm = colors.Normalize(vmin=np.min(datasets), vmax=np.max(datasets))
+images = []
+i = 0
+for ax, data in zip(ax7.flat, datasets):
+    images.append(ax.matshow(data, norm=norm, cmap = 'plasma'))
+    ax.set_title(titles[i])
+    i = i + 1
+fig7.colorbar(images[0], ax=ax7, orientation='vertical', shrink=0.7, fraction=.1)
 
 #==========================================================================================================#
-
-""" Plotting discrepancy in subspace/latent space """
-datasets = [np.abs(sproj1_reshaped - sproj2_reshaped), np.abs(lproj1_reshaped - lproj2_reshaped)]
-
-# create a single norm to be shared across all images
-norm = colors.Normalize(vmin=np.min(datasets), vmax=np.max(datasets))
-
-fig, axs = plt.subplots(2, 1)
-fig.suptitle('Multiple images')
-
-images = []
-for ax, data in zip(axs.flat, datasets):
-    images.append(ax.matshow(data, norm=norm, cmap='plasma'))
-
-fig.colorbar(images[0], ax=axs, orientation='horizontal', fraction=.1)
-
-# plt.show()
 
 """ Plotting distribution """
 binnum = round(np.sqrt(len(df1['rho'])))
