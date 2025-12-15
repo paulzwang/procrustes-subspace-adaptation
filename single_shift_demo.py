@@ -282,7 +282,7 @@ if __name__ == '__main__':
 
     # Actual vs. predicted
     ax3[0].scatter(Ytpred_og,Yt,s=2,label=f"RMSE: {round(root_mean_squared_error(Yt, Ytpred_og),4)}",color='red', rasterized=True)
-    # ax3[1,0].scatter(Ytpred_da,Yt,s=2,label=f"RMSE: {round(root_mean_squared_error(Yt, Ytpred_da),4)}",color='purple',alpha=0.25, rasterized=True)
+    # ax3[0].scatter(Ytpred_da,Yt,s=2,label=f"RMSE: {round(root_mean_squared_error(Yt, Ytpred_da),4)}",color='purple',alpha=0.25, rasterized=True)
     ax3[0].scatter(Ytpred_sda,Yt_seen,s=2,label=f"RMSE: {round(root_mean_squared_error(Yt_seen, Ytpred_sda),4)}",color='darkorchid', rasterized=True)
     # Plot line y=x, the ideal predicted vs. actual curve
     lims = [
@@ -314,7 +314,7 @@ if __name__ == '__main__':
 
     ax3[3].scatter(df2['S'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax3[3].scatter(df2['S'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
-    # ax3[1,2].scatter(df2['S'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
+    # ax3[3].scatter(df2['S'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
     ax3[3].scatter(df2['S'][0:index_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax3[3].set_xlabel('Molecular\n Speed Ratio',labelpad=15)
     fig3.savefig('plots/actualpred_state_space.pdf', format='pdf', bbox_inches='tight')
