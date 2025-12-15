@@ -10,7 +10,6 @@ import psa
 import torch 
 from sklearn.metrics import root_mean_squared_error
 from sklearn.preprocessing import StandardScaler
-from scipy.interpolate import make_interp_spline
 import scipy.linalg as linalg
 from scipy.linalg import orth
 
@@ -64,14 +63,15 @@ rho2 = scaler.fit_transform(rho2)
 rho1_interp, rho2_interp = interpolate_inputs(rho1,rho2,t1,t2)
 
 #==========================================================================================================#
+L = 6 # Window length
 
 # Non-interpolated trajectory matrices
-H_rho1 = torch.tensor(find_trajectory_matrix(rho1,window_length=50),dtype=torch.float32)
-H_rho2 = torch.tensor(find_trajectory_matrix(rho2,window_length=50),dtype=torch.float32)
+H_rho1 = torch.tensor(find_trajectory_matrix(rho1,window_length=L),dtype=torch.float32)
+H_rho2 = torch.tensor(find_trajectory_matrix(rho2,window_length=L),dtype=torch.float32)
 
 # Interpolated trajectory matrices
-H_rho1_interp = find_trajectory_matrix(rho1_interp,window_length=50)
-H_rho2_interp = find_trajectory_matrix(rho2_interp,window_length=50)
+H_rho1_interp = find_trajectory_matrix(rho1_interp,window_length=L)
+H_rho2_interp = find_trajectory_matrix(rho2_interp,window_length=L)
 
 # Plotting trajectory matrices
 print(f'Plotting trajectory matrices. Their dimensions are {H_rho1_interp.shape}.')
@@ -83,8 +83,8 @@ ax0[0].set_title('Source Domain')
 ax0[1].set_title('Target Domain')
 
 # Plotting reshaped trajectory matrices
-H_rho1_square = H_rho1_interp.reshape(440,440)
-H_rho2_square = H_rho2_interp.reshape(440,440)
+H_rho1_square = H_rho1_interp.reshape(-1,178)
+H_rho2_square = H_rho2_interp.reshape(-1,178)#reshape(440,440)
 print(f'Plotting reshaped trajectory matrices for purely visualization purposes. Their dimensions are: {H_rho1_square.shape}.')
 fig1, ax1 = plt.subplots(1,2)
 ax1[0].matshow(H_rho1_square)
@@ -96,7 +96,7 @@ ax1[1].set_title('Target Domain')
 
 H_rho1_interp = torch.tensor(H_rho1_interp,dtype=torch.float32)
 H_rho2_interp = torch.tensor(H_rho2_interp,dtype=torch.float32)
-Us,Ss,Vs = torch.linalg.svd(H_rho1_interp)
+Us,Ss,Vs = torch.linalg.svd(H_rho1)
 Ut,St,Vt = torch.linalg.svd(H_rho2_interp)
 
 #==========================================================================================================#
@@ -119,7 +119,7 @@ for i in range(num_subplots):
 
 fig3, ax3 = plt.subplots(1,num_subplots,figsize=(20,16))
 for i in range(num_subplots):
-    ax3[i].matshow(H_rho1_elem[i].reshape(440,440))
+    ax3[i].matshow(H_rho1_elem[i].reshape(-1,178))
     ax3[i].set_title(f"Source Domain, Reshaped $H_{str(i)}$")
     # Remove x-axis ticks and labels
     ax3[i].set_xticks([])
@@ -149,7 +149,7 @@ for i in range(num_subplots):
 
 fig5, ax5 = plt.subplots(1,num_subplots,figsize=(20,16))
 for i in range(num_subplots):
-    ax5[i].matshow(H_rho2_elem[i].reshape(440,440))
+    ax5[i].matshow(H_rho2_elem[i].reshape(-1,178))
     ax5[i].set_title(f"Target Domain, Reshaped $H_{str(i)}$")
     # Remove x-axis ticks and labels
     ax5[i].set_xticks([])
@@ -205,18 +205,9 @@ Q = V.T @ U.T
 s = torch.trace(torch.diag(S))/torch.trace(H_rho1_proj @ H_rho1_proj.T)
 
 Xa = s * Q @ (H_rho1_sub.T @ H_rho1_interp)
-
 Za = H_rho2_sub.T @ H_rho2_interp
-Xa = Xa.T
-Za = Za.T
-# Hankelise outputs
-Ys_H = find_trajectory_matrix(Q1,window_length=50)
-Yt_H = find_trajectory_matrix(Q2,window_length=50)
-
 Xa = Xa.cpu().detach().numpy()
 Za = Za.cpu().detach().numpy()
-Ys_H = Ys_H.T
-Yt_h = Yt_H.T
 
 print(H_rho1.shape, H_rho2.shape)
 print(H_rho1_sub.shape,H_rho2_sub.shape)
@@ -224,9 +215,9 @@ print(H_rho1_proj.shape,H_rho2_proj.shape)
 print(Xa.shape,Za.shape)
 
 """ Plotting Subspace Projections and Latent Space Projections """
-colnum = 160
-sproj1_reshaped = H_rho1_proj.T.cpu().detach().numpy().reshape(-1,colnum)
-sproj2_reshaped = H_rho2_proj.T.cpu().detach().numpy().reshape(-1,colnum)
+colnum = 178
+sproj1_reshaped = H_rho1_proj.cpu().detach().numpy().reshape(-1,colnum)
+sproj2_reshaped = H_rho2_proj.cpu().detach().numpy().reshape(-1,colnum)
 lproj1_reshaped = Xa.reshape(-1,colnum)
 lproj2_reshaped = Za.reshape(-1,colnum)
 
@@ -253,7 +244,7 @@ fig7, ax7 = plt.subplots(1,2)
 datasets = [np.abs(sproj1_reshaped - sproj2_reshaped), np.abs(lproj1_reshaped - lproj2_reshaped)]
 titles = ['Subspace Discrepancy', 'Latent Space Discrepancy']
 # create a single norm to be shared across all images
-norm = colors.Normalize(vmin=np.min(datasets), vmax=np.max(datasets))
+norm = colors.Normalize(vmin=np.min(datasets[1:]), vmax=np.max(datasets[1:]))
 images = []
 i = 0
 for ax, data in zip(ax7.flat, datasets):
@@ -261,7 +252,7 @@ for ax, data in zip(ax7.flat, datasets):
     ax.set_title(titles[i])
     i = i + 1
 fig7.colorbar(images[0], ax=ax7, orientation='vertical', shrink=0.7, fraction=.1)
-
+plt.show()
 #==========================================================================================================#
 
 """ Plotting distribution """
@@ -282,33 +273,110 @@ plt.hist(sproj2_reshaped.ravel(), bins=binnum, alpha=0.6)
 plt.figure()
 plt.hist(lproj1_reshaped.ravel(), bins=binnum, alpha=0.6)
 plt.hist(lproj2_reshaped.ravel(), bins=binnum, alpha=0.6)
-plt.show()
 
+#==========================================================================================================#
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# fig6, ax6 = plt.subplots(2,2)
-# colnum = 160
-# vmin = np.min(H_rho1_proj.ravel().cpu().detach().numpy())
-# vmax = np.max(H_rho1_proj.ravel().cpu().detach().numpy())
-# cmap = 'viridis'
+U,S,V = torch.linalg.svd(H_rho1_proj @ H_rho2_proj.T)
+Q = V.T @ U.T
+s = torch.trace(torch.diag(S))/torch.trace(H_rho1_proj @ H_rho1_proj.T)
 
+Xa = s * Q @ (H_rho1_sub.T @ H_rho1)
+Za = H_rho2_sub.T @ H_rho2
+Xa = Xa.T.to(device)
+Za = Za.T.to(device)
 
-# H_rho1_proj_np = H_rho1_proj.cpu().detach().numpy()
-# H_rho2_proj_np = H_rho2_proj.cpu().detach().numpy()
-# im = ax6[0,0].matshow(H_rho1_proj_np.T.reshape(-1,colnum), vmin=vmin, vmax=vmax, cmap=cmap)
-# ax6[1,0].matshow(H_rho2_proj_np.T.reshape(-1,colnum), vmin=vmin, vmax=vmax, cmap=cmap)
-# ax6[0,1].matshow(Xa.reshape(-1,colnum), vmin=vmin, vmax=vmax, cmap=cmap)
-# ax6[1,1].matshow(Za.reshape(-1,colnum), vmin=vmin, vmax=vmax, cmap=cmap)
-# fig6.colorbar(im)
-# fig6.tight_layout()
+# Hankelise outputs
+Ys_H = torch.tensor(find_trajectory_matrix(Q1,window_length=L),dtype=torch.float32).to(device)
+Yt_H = torch.tensor(find_trajectory_matrix(Q2,window_length=L),dtype=torch.float32).to(device)
 
-# vmin = np.min(H_rho1_proj.ravel().cpu().detach().numpy())
-# vmax = np.max(H_rho1_proj.ravel().cpu().detach().numpy())
-# cmap = 'inferno'
+rho1_torch = torch.tensor(rho1,dtype=torch.float32).to(device)
+rho2_torch = torch.tensor(rho2,dtype=torch.float32).to(device)
+Q1_torch = torch.tensor(Q1,dtype=torch.float32).to(device)
+Q2_torch = torch.tensor(Q2,dtype=torch.float32).to(device)
+Ys_H = Ys_H.T
+Yt_h = Yt_H.T
 
-# fig7, ax7 = plt.subplots(1,2,figsize=(20,16))
-# im1 = ax7[0].matshow(np.abs(H_rho1_proj_np.T.reshape(-1,colnum)-H_rho2_proj_np.T.reshape(-1,colnum)), cmap=cmap)
-# im2 = ax7[1].matshow(np.abs(Xa.reshape(-1,colnum)-Za.reshape(-1,colnum)), cmap=cmap)
-# fig7.colorbar(im1)
-# fig7.colorbar(im2)
+ # Define neural network hyperparameters
+num_layers = int(4)
+num_neurons = int(200)
+hidden_sizes = [num_neurons] * num_layers
+learning_rate = 0.006
+num_epochs = 200 
 
-# plt.show()
+model_og = NeuralNetwork(input_size=rho1_torch.size(1), hidden_sizes=hidden_sizes, output_size=Q1_torch.size(1)).to(device)
+model_da = NeuralNetwork(input_size=Xa.size(1), hidden_sizes=hidden_sizes, output_size=Ys_H.size(1)).to(device)
+
+loss_og = train_model(model_og,rho1_torch,Q1_torch,num_epochs,learning_rate)
+loss_da = train_model(model_da,Xa,Ys_H,num_epochs,learning_rate,weight_decay=1e-3)
+
+print(f"Original model Loss: {loss_og}")
+print(f"Adapted model loss: {loss_da}")
+
+model_og.eval()
+model_da.eval()
+with torch.no_grad():
+    Yspred_torch_og = model_og(rho1_torch)
+    Yspred_torch_da = model_da(Xa)
+    Ytpred_torch_og = model_og(rho2_torch)
+    Ytpred_torch_da = model_da(Za)
+
+Yspred_og = Yspred_torch_og.cpu().detach().numpy() # Save to local memory (.cpu), convert to numpy array (.detach.numpy), and convert to scalar value (.item)
+Yspred_da = Yspred_torch_da.cpu().detach().numpy()
+Ytpred_og = Ytpred_torch_og.cpu().detach().numpy()
+Ytpred_da = Ytpred_torch_da.cpu().detach().numpy()
+
+Yspred_da = H_to_TS(Yspred_da.T)
+Ytpred_da = H_to_TS(Ytpred_da.T)
+Ys = H_to_TS(Ys_H.T.cpu().detach().numpy()) # Ys == Y1 after de-Hankelising
+Yt = H_to_TS(Yt_H.T.cpu().detach().numpy()) # Yt == Y2 after de-Hankelising
+
+# Plotting
+fig1, ax1 = plt.subplots(2,2,width_ratios=[0.4,1])
+plt.subplots_adjust(wspace=0.25)
+# Source Domain
+ax1[0,0].scatter(Yspred_og,Ys,s=2,label=f"RMSE: {round(root_mean_squared_error(Ys, Yspred_og),4)}",color='red', rasterized=True)
+ax1[0,0].scatter(Yspred_da,Ys,s=2,label=f"RMSE: {round(root_mean_squared_error(Ys, Yspred_da),4)}",color='purple',alpha=0.25)
+# Plot line y=x, the ideal predicted vs. actual curve
+lims = [
+    np.min([ax1[0,0].get_xlim(), ax1[0,0].get_ylim()]),  # min of both axes
+    np.max([ax1[0,0].get_xlim(), ax1[0,0].get_ylim()]),  # max1 of both axes
+]
+ax1[0,0].plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+ax1[0,0].set_aspect('equal')
+ax1[0,0].set_xlim(lims)
+ax1[0,0].set_ylim(lims)
+ax1[0,0].set_xlabel('Predicted Output')
+ax1[0,0].set_ylabel('Actual Output') 
+ax1[0,0].legend(fontsize=6.25,framealpha=0.5)
+
+ax1[0,1].plot(Ys,label="Validation actual",color='black')
+ax1[0,1].plot(Yspred_og,label="No adaptation",color='red')
+ax1[0,1].plot(Yspred_da,label="Batch adapted",color='purple',alpha=0.25)
+ax1[0,1].set_xlabel('Time Step')
+ax1[0,1].set_ylabel('Heat Rate (W/cm$^2$)')
+ax1[0,1].legend(fontsize=6.25,framealpha=0.5)
+
+# Target Domain
+ax1[1,0].scatter(Ytpred_og,Yt,s=2,label=f"RMSE: {round(root_mean_squared_error(Yt, Ytpred_og),4)}",color='red', rasterized=True)
+ax1[1,0].scatter(Ytpred_da,Yt,s=2,label=f"RMSE: {round(root_mean_squared_error(Yt, Ytpred_da),4)}",color='purple',alpha=0.25, rasterized=True)
+# Plot line y=x, the ideal predicted vs. actual curve
+lims = [
+    np.min([ax1[1,0].get_xlim(), ax1[1,0].get_ylim()]),  # min of both axes
+    np.max([ax1[1,0].get_xlim(), ax1[1,0].get_ylim()]),  # max1 of both axes
+]
+ax1[1,0].plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+ax1[1,0].set_aspect('equal')
+ax1[1,0].set_xlim(lims)
+ax1[1,0].set_ylim(lims)
+ax1[1,0].set_xlabel('Predicted Output')
+ax1[1,0].set_ylabel('Actual Output') 
+ax1[1,0].legend(fontsize=6.25,framealpha=0.5)
+
+ax1[1,1].plot(Yt,label="Operational actual",color='gray')
+ax1[1,1].plot(Ytpred_og,label="No adaptation",color='red')
+ax1[1,1].plot(Ytpred_da,label="Batch adapted",color='purple',alpha=0.25)
+ax1[1,1].set_xlabel('Time Step')
+ax1[1,1].set_ylabel('Heat Rate (W/cm$^2$)')
+ax1[1,1].legend(fontsize=6.25,framealpha=0.5)
+fig1.savefig('test_heatrate_vs_time.pdf', format='pdf')
