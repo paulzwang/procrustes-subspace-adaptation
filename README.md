@@ -2,7 +2,7 @@
 
 This repository contains Python code used to demonstrate the results presented in Section 5 of the following AIAA SciTech conference paper.
 
-> Paul Wang, Olivia J. Pinon Fischer, and Dimitri N. Mavris. "Adaptive Digital Twins: Continuous Subspace Learning for Dynamic Domains". _AIAA Scitech 2026 Forum_, January 2026.
+> Paul Wang, Olivia J. Pinon-Fischer and Dimitri Mavris. "Adaptive Digital Twins: Continuous Subspace Learning for Dynamic Domains," AIAA 2026-1531. _AIAA SCITECH 2026 Forum_. January 2026.
 
 ## Content 
 ### Demo Files
