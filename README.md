@@ -25,4 +25,4 @@ This repository contains Python code used to demonstrate the results presented i
 ## Usage
 Ensure the root directory is `procrustes-subspace-adaptation`. The demo scripts have file dependencies that rely on relative paths from this directory.
 1. Python is required to run all code. Install all packages in `requirements.txt` into the Python environment. Note that PyTorch was installed with CUDA 13.0 as the compute platform. If your machine does not have CUDA capability (i.e., no GPU), change `torch==2.9.1+cu130` and `torchvision==0.24.1+cu130` to `torch==2.9.1` and `torchvision==0.24.1` in `requirements.txt` before installing from requirements.
-2. Run `single_shift_demo.py` or `increasing_shift_demo.py` to produce results. Result plots can be found in the `plots` folder as PDFs.
+2. Run any demo script (e.g., `rp_shift_demo.py` or `increasing_rp_shift_demo.py`) to produce results. Result plots can be found in the `plots` folder as PDFs.
