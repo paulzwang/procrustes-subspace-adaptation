@@ -7,8 +7,12 @@ This repository contains Python code used to demonstrate the results presented i
 ## Content 
 ### Demo Files
 - `tutorial.ipynb` is a Python notebook that gives a step-by-step tutorial on the subspace adaptation learning algorithm.
-- `single_shift_demo.py` contains code to run Procrustes subspace adaptation for a single domain shift (i.e., a shift downwards in the aerobraking orbit periapsis).
-- `increasing_shift_demo.py` contains code that showcases Procrustes subspace adaptation on multiple domain shifts.
+- `rp_shift_demo.py` contains code to run Procrustes subspace adaptation for a periapsis domain shift (i.e., a decrease in initial $r_p$ from DRM to another mission).
+- `increasing_rp_shift_demo.py` contains code that showcases Procrustes subspace adaptation on multiple periapsis shifts.
+- `fixed_a_e_shift_demo.py` contains code to run Procrustes subspace adaptation for an eccentricity domain shift, with the semimajor axis of the initial orbit fixed.
+- `fixed_a_increasing_e_shift_demo.py` contains code that showcases Procrustes subspace adaptation on multiple eccentricity shifts, with the semimajor axis of the initial orbit fixed.
+- `fixed_p_e_shift_demo.py` contains code to run Procrustes subspace adaptation for an eccentricity domain shift, with the semi-latus rectum of the initial orbit fixed.
+- `fixed_p_decreasing_e_shift_demo.py` contains code that showcases Procrustes subspace adaptation on multiple eccentricity shifts, with the semi-latus rectum of the initial orbit fixed.
 
 ### Functions
 - `psa.py` contains the learning algorithm for Procrustes subspace adaptation.
@@ -19,5 +23,6 @@ This repository contains Python code used to demonstrate the results presented i
 - The folder `models` contains saved PyTorch model weights and biases as `.pt` files for the baseline neural network and the subspace adapted network. The input layer size, output layer size, number of layers, number of neurons, and hidden layer size are saved under `model_settings.txt` files in the `models` folder.
 
 ## Usage
+Ensure the root directory is `procrustes-subspace-adaptation`. The demo scripts have file dependencies that rely on relative paths from this directory.
 1. Python is required to run all code. Install all packages in `requirements.txt` into the Python environment. Note that PyTorch was installed with CUDA 13.0 as the compute platform. If your machine does not have CUDA capability (i.e., no GPU), change `torch==2.9.1+cu130` and `torchvision==0.24.1+cu130` to `torch==2.9.1` and `torchvision==0.24.1` in `requirements.txt` before installing from requirements.
 2. Run `single_shift_demo.py` or `increasing_shift_demo.py` to produce results. Result plots can be found in the `plots` folder as PDFs.
