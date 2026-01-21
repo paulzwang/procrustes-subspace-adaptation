@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     # Specify up to which data point is seen by the model
     percent_seen = 1
-    index_seen = round(percent_seen*df1['time'].shape[0]) # df1['time'].shape[0]
+    index_seen = round(percent_seen*df2['time'].shape[0]) # df1['time'].shape[0]
 
     #=======================================================================================#
     # Mission 1 Data Preprocessing
