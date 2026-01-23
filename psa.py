@@ -7,7 +7,7 @@ import scipy.linalg as linalg
 from scipy.linalg import orth
 
 def interpolate_inputs(X,Z,ts,tt,interptype='time'):
-    visualization = True
+    visualization = False
 
     if interptype == 'time':
         """ Common Time Interpolation Scheme """
