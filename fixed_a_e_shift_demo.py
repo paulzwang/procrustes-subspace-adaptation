@@ -15,6 +15,9 @@ if __name__ == '__main__':
     # Semimajor axis "a" is fixed. Eccentricity "e" is different between missions
     mission1_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
     mission2_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12003_rp=96.8\Results_ctrl=0_ra=12003_rp=96.8_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12004_rp=95.3\Results_ctrl=0_ra=12004_rp=95.3_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12006_rp=93.8\Results_ctrl=0_ra=12006_rp=93.8_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12007_rp=92.3\Results_ctrl=0_ra=12007_rp=92.3_hl=0.150_90.0deg.csv'
 
     utils.plot_domain_visualization(mission1_data_directory,mission2_data_directory)
 
@@ -65,8 +68,8 @@ if __name__ == '__main__':
     #=======================================================================================#
     # Subspace Alignment
     #=======================================================================================#
+    Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1,X2_seen,Y1,Y2_seen,t1,t2_seen,window_length=5,k=5,interptype='time')
     Xsa, Xta, Ys, Yt = psa.batch_procrustes_subspace_adaptation(X1,X2,Y1,Y2,t1,t2,window_length=50,k=5)
-    Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1,X2_seen,Y1,Y2_seen,t1,t2_seen,window_length=5,k=5) # Note that streaming performs better with smaller window size 
 
     #=======================================================================================#
     # Data Preprocessing
@@ -116,7 +119,7 @@ if __name__ == '__main__':
 
     loss_og = train_model(model_og,X1_torch,Y1_torch,num_epochs,learning_rate)
     loss_da = train_model(model_da,Xsa_torch,Ys_torch,num_epochs,learning_rate)
-    loss_sda = train_model(model_sda,Xsa_stream_torch,Ys_stream_torch,num_epochs,learning_rate,weight_decay=1e-3) # Note the change in L2 regularizer
+    loss_sda = train_model(model_sda,Xsa_stream_torch,Ys_stream_torch,num_epochs,learning_rate,weight_decay=0) # Note the change in L2 regularizer
 
     print(f"Original model Loss: {loss_og}")
     print(f"Batch adapted model loss: {loss_da}")

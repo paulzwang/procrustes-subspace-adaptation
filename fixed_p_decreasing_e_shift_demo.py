@@ -87,7 +87,7 @@ if __name__ == '__main__':
         #=======================================================================================#
         window_length = 5 # 50
         k = 5 # subspace rank
-        Xsa, Xta, Ys, Yt = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,window_length,k)
+        Xsa, Xta, Ys, Yt = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,window_length,k,interptype='removal')
 
         #=======================================================================================#
         # Data Preprocessing
@@ -122,7 +122,7 @@ if __name__ == '__main__':
         model_da = NeuralNetwork(input_size=Xsa_torch.size(1), hidden_sizes=hidden_sizes, output_size=Ys_torch.size(1)).to(device)
 
         loss_og = train_model(model_og,X1_torch,Y1_torch,num_epochs,learning_rate)
-        loss_da = train_model(model_da,Xsa_torch,Ys_torch,num_epochs,learning_rate,weight_decay=1e-3)
+        loss_da = train_model(model_da,Xsa_torch,Ys_torch,num_epochs,learning_rate,weight_decay=0)
 
         print(f"Original model Loss: {loss_og}")
         print(f"Domain adapted model loss: {loss_da}")

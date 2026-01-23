@@ -14,11 +14,10 @@ from sklearn.preprocessing import StandardScaler
 if __name__ == '__main__':
     # rp is different between missions
     mission1_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
-    
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=99.0\Results_ctrl=0_ra=12000_rp=99.0_hl=0.150_90.0deg.csv'
-    # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
+    mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=96.0\Results_ctrl=0_ra=12000_rp=96.0_hl=0.150_90.0deg.csv'
-    mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=95.0\Results_ctrl=0_ra=12000_rp=95.0_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=95.0\Results_ctrl=0_ra=12000_rp=95.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=94.0\Results_ctrl=0_ra=12000_rp=94.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=92.0\Results_ctrl=0_ra=12000_rp=92.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=90.0\Results_ctrl=0_ra=12000_rp=90.0_hl=0.150_90.0deg.csv'
@@ -72,8 +71,8 @@ if __name__ == '__main__':
     #=======================================================================================#
     # Subspace Alignment
     #=======================================================================================#
+    Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1,X2_seen,Y1,Y2_seen,t1,t2_seen,window_length=5,k=5,interptype='time')
     Xsa, Xta, Ys, Yt = psa.batch_procrustes_subspace_adaptation(X1,X2,Y1,Y2,t1,t2,window_length=50,k=5)
-    Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1,X2_seen,Y1,Y2_seen,t1,t2_seen,window_length=5,k=5) # Note that streaming performs better with smaller window size 
 
     #=======================================================================================#
     # Data Preprocessing
@@ -123,7 +122,7 @@ if __name__ == '__main__':
 
     loss_og = train_model(model_og,X1_torch,Y1_torch,num_epochs,learning_rate)
     loss_da = train_model(model_da,Xsa_torch,Ys_torch,num_epochs,learning_rate)
-    loss_sda = train_model(model_sda,Xsa_stream_torch,Ys_stream_torch,num_epochs,learning_rate,weight_decay=1e-3) # Note the change in L2 regularizer
+    loss_sda = train_model(model_sda,Xsa_stream_torch,Ys_stream_torch,num_epochs,learning_rate,weight_decay=0) # Note the change in L2 regularizer
 
     print(f"Original model Loss: {loss_og}")
     print(f"Batch adapted model loss: {loss_da}")
