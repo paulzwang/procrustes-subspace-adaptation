@@ -265,7 +265,8 @@ def streaming_procrustes_subspace_adaptation(X, Z, Ys, Yt, ts, tt, window_length
     Hx_sub = Us[:,0:k]
     
     # Target domain subspace streaming
-    Uhat = linalg.orth(np.random.randn(Hx_sub.shape[0],Hx_sub.shape[1]))
+    # Uhat = linalg.orth(np.random.randn(Hx_sub.shape[0],Hx_sub.shape[1]))
+    Uhat = Hx_sub.cpu().detach().numpy()
     Utrue = Ut[:,0:k]
     Hz_sub,_ = ojas(Hz_L.T.cpu().detach().numpy(), Uhat,Utrue.cpu().detach().numpy(), eta=0.001)
     Hz_sub = torch.tensor(Hz_sub,dtype=torch.float32).to(device)
