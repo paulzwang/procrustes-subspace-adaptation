@@ -17,14 +17,15 @@ if __name__ == '__main__':
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=99.0\Results_ctrl=0_ra=12000_rp=99.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=98.0\Results_ctrl=0_ra=12000_rp=98.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
-    # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=96.0\Results_ctrl=0_ra=12000_rp=96.0_hl=0.150_90.0deg.csv'
-    mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=95.0\Results_ctrl=0_ra=12000_rp=95.0_hl=0.150_90.0deg.csv'
+    mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=96.0\Results_ctrl=0_ra=12000_rp=96.0_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=95.0\Results_ctrl=0_ra=12000_rp=95.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=94.0\Results_ctrl=0_ra=12000_rp=94.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=93.0\Results_ctrl=0_ra=12000_rp=93.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=92.0\Results_ctrl=0_ra=12000_rp=92.0_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=91.0\Results_ctrl=0_ra=12000_rp=91.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=90.0\Results_ctrl=0_ra=12000_rp=90.0_hl=0.150_90.0deg.csv'
 
-    # utils.plot_domain_visualization(mission1_data_directory,mission2_data_directory)
+    utils.plot_domain_visualization(mission1_data_directory,mission2_data_directory)
 
     # Convert to dataframes and remove duplicate time entries
     df1 = pd.read_csv(mission1_data_directory).drop_duplicates(subset=['time'], keep='first')
@@ -75,7 +76,6 @@ if __name__ == '__main__':
     # Subspace Alignment
     #=======================================================================================#
     Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1_seen,X2_seen,Y1_seen,Y2_seen,t1_seen,t2_seen,window_length=5,k=5,interptype='time',manifold_visual=True)
-    # Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1,X2_seen,Y1,Y2_seen,t1,t2_seen,window_length=5,k=5,interptype='time',manifold_visual=True)
     Xsa, Xta, Ys, Yt = psa.batch_procrustes_subspace_adaptation(X1,X2,Y1,Y2,t1,t2,window_length=50,k=5)
 
     #=======================================================================================#
