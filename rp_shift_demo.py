@@ -32,8 +32,8 @@ if __name__ == '__main__':
 
     # Specify up to which data point is seen by the model
     percent_seen = 1
-    valindex_seen = round(percent_seen*df1['time'].shape[0]) # df1['time'].shape[0]
-    oprindex_seen = round(percent_seen*df2['time'].shape[0]) # df1['time'].shape[0]
+    valindex_seen = round(percent_seen*df1['time'].shape[0])
+    oprindex_seen = round(percent_seen*df2['time'].shape[0])
 
     #=======================================================================================#
     # Mission 1 Data Preprocessing
@@ -253,7 +253,7 @@ if __name__ == '__main__':
     ax2[0,2].scatter(df1['S'], df1['heat_rate'], s=2, label="Validation actual", color='black', rasterized=True)
     ax2[0,2].scatter(df1['S'], Yspred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[0,2].scatter(df1['S'], Yspred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[0,2].scatter(df1['S'], Yspred_da, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[0,2].scatter(df1['S'][0:valindex_seen], Yspred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
 
     # Plotting state space in target domain
     ax2[1,0].scatter(df2['rho'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)

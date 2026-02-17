@@ -27,7 +27,8 @@ if __name__ == '__main__':
 
     # Specify up to which data point is seen by the model
     percent_seen = 1
-    index_seen = round(percent_seen*df2['time'].shape[0]) # df1['time'].shape[0]
+    valindex_seen = round(percent_seen*df1['time'].shape[0])
+    oprindex_seen = round(percent_seen*df2['time'].shape[0])
 
     #=======================================================================================#
     # Mission 1 Data Preprocessing
@@ -40,12 +41,12 @@ if __name__ == '__main__':
     Y1 = np.array(df1['heat_rate']).reshape(-1,1)
 
     # Split the data into seen/unseen
-    t1_seen = t1[0:index_seen]
-    t1_unseen = t1[index_seen+1:]
-    X1_seen = X1[0:index_seen,:]
-    X1_unseen = X1[index_seen+1:]
-    Y1_seen = Y1[0:index_seen,:]
-    Y1_unseen = Y1[index_seen+1:,:]
+    t1_seen = t1[0:valindex_seen]
+    t1_unseen = t1[valindex_seen+1:]
+    X1_seen = X1[0:valindex_seen,:]
+    X1_unseen = X1[valindex_seen+1:]
+    Y1_seen = Y1[0:valindex_seen,:]
+    Y1_unseen = Y1[valindex_seen+1:,:]
 
     #=======================================================================================#
     # Mission 2 Data Preprocessing
@@ -58,17 +59,17 @@ if __name__ == '__main__':
     Y2 = np.array(df2['heat_rate']).reshape(-1,1)
 
     # Split the data into seen/unseen
-    t2_seen = t2[0:index_seen]
-    t2_unseen = t2[index_seen+1:]
-    X2_seen = X2[0:index_seen,:]
-    X2_unseen = X2[index_seen+1:,:]
-    Y2_seen = Y2[0:index_seen,:]
-    Y2_unseen = Y2[index_seen+1:,:]
+    t2_seen = t2[0:oprindex_seen]
+    t2_unseen = t2[oprindex_seen+1:]
+    X2_seen = X2[0:oprindex_seen,:]
+    X2_unseen = X2[oprindex_seen+1:,:]
+    Y2_seen = Y2[0:oprindex_seen,:]
+    Y2_unseen = Y2[oprindex_seen+1:,:]
 
     #=======================================================================================#
     # Subspace Alignment
     #=======================================================================================#
-    Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1,X2_seen,Y1,Y2_seen,t1,t2_seen,window_length=5,k=5,interptype='time')
+    Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1_seen,X2_seen,Y1_seen,Y2_seen,t1_seen,t2_seen,window_length=5,k=5,interptype='time')
     Xsa, Xta, Ys, Yt = psa.batch_procrustes_subspace_adaptation(X1,X2,Y1,Y2,t1,t2,window_length=50,k=5)
 
     #=======================================================================================#
@@ -234,25 +235,25 @@ if __name__ == '__main__':
     ax2[0,0].scatter(df1['rho'], df1['heat_rate'], s=2, label="Validation actual", color='black', rasterized=True)
     ax2[0,0].scatter(df1['rho'], Yspred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[0,0].scatter(df1['rho'], Yspred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[0,0].scatter(df1['rho'], Yspred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[0,0].scatter(df1['rho'][0:valindex_seen], Yspred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax2[0,0].set_ylabel('Heat Rate (W/cm$^2$)') 
     ax2[0,0].legend(fontsize=6.25,framealpha=0.5)
 
     ax2[0,1].scatter(df1['T'], df1['heat_rate'], s=2, label="Validation actual", color='black', rasterized=True)
     ax2[0,1].scatter(df1['T'], Yspred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[0,1].scatter(df1['T'], Yspred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[0,1].scatter(df1['T'], Yspred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[0,1].scatter(df1['T'][0:valindex_seen], Yspred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
 
     ax2[0,2].scatter(df1['S'], df1['heat_rate'], s=2, label="Validation actual", color='black', rasterized=True)
     ax2[0,2].scatter(df1['S'], Yspred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[0,2].scatter(df1['S'], Yspred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[0,2].scatter(df1['S'], Yspred_da, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[0,2].scatter(df1['S'][0:valindex_seen], Yspred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
 
     # Plotting state space in target domain
     ax2[1,0].scatter(df2['rho'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax2[1,0].scatter(df2['rho'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[1,0].scatter(df2['rho'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[1,0].scatter(df2['rho'][0:index_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[1,0].scatter(df2['rho'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax2[1,0].set_xlabel('Atmospheric Density (kg/m$^3$)',labelpad=15)
     ax2[1,0].set_ylabel('Heat Rate (W/cm$^2$)') 
     ax2[1,0].legend(fontsize=6.25,framealpha=0.5)
@@ -260,13 +261,13 @@ if __name__ == '__main__':
     ax2[1,1].scatter(df2['T'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax2[1,1].scatter(df2['T'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[1,1].scatter(df2['T'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[1,1].scatter(df2['T'][0:index_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[1,1].scatter(df2['T'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax2[1,1].set_xlabel('Freestream Temperature (K)',labelpad=15)
 
     ax2[1,2].scatter(df2['S'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax2[1,2].scatter(df2['S'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[1,2].scatter(df2['S'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
-    ax2[1,2].scatter(df2['S'][0:index_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[1,2].scatter(df2['S'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax2[1,2].set_xlabel('Molecular Speed Ratio',labelpad=15)
     
 
@@ -296,7 +297,7 @@ if __name__ == '__main__':
     ax3[1].scatter(df2['rho'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax3[1].scatter(df2['rho'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax3[1].scatter(df2['rho'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
-    ax3[1].scatter(df2['rho'][0:index_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax3[1].scatter(df2['rho'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax3[1].set_xlabel('Atmospheric\n Density (kg/m$^3$)',labelpad=15)
     ax3[1].set_ylabel('Heat Rate (W/cm$^2$)') 
     ax3[1].legend(fontsize=6.25,framealpha=0.5)
@@ -304,13 +305,13 @@ if __name__ == '__main__':
     ax3[2].scatter(df2['T'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax3[2].scatter(df2['T'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax3[2].scatter(df2['T'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
-    ax3[2].scatter(df2['T'][0:index_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax3[2].scatter(df2['T'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax3[2].set_xlabel('Freestream\n Temperature (K)',labelpad=15)
 
     ax3[3].scatter(df2['S'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax3[3].scatter(df2['S'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax3[3].scatter(df2['S'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
-    ax3[3].scatter(df2['S'][0:index_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax3[3].scatter(df2['S'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
     ax3[3].set_xlabel('Molecular\n Speed Ratio',labelpad=15)
     
 
