@@ -268,7 +268,7 @@ def streaming_procrustes_subspace_adaptation(X, Z, Ys, Yt, ts, tt, window_length
     # Uhat = linalg.orth(np.random.randn(Hx_sub.shape[0],Hx_sub.shape[1]))
     Uhat = Hx_sub.cpu().detach().numpy()
     Utrue = Ut[:,0:k]
-    Hz_sub,_ = ojas(Hz_L.T.cpu().detach().numpy(), Uhat,Utrue.cpu().detach().numpy(), eta=0.001)
+    Hz_sub,_ = ojas(Hz_L.T.cpu().detach().numpy(), Uhat,Utrue.cpu().detach().numpy(), eta=0.001) # 0.001
     Hz_sub = torch.tensor(Hz_sub,dtype=torch.float32).to(device)
 
     Hx_proj = Hx_sub.T @ Hx_L
@@ -301,8 +301,16 @@ def streaming_procrustes_subspace_adaptation(X, Z, Ys, Yt, ts, tt, window_length
         plot_manifolds(Xa,Za,Hx_proj,Hz_proj) # Interpolated data
         plot_manifolds(Xa,Za,Hx_sub.T@Hx,Hz_sub.T@Hz) # Non-interpolated data
 
-    # Compute Grassmannian distances between embeddings
-    print(f'Grassmannian distance between unaligned projections: {linalg.norm(Hx_proj - Hz_proj)}')
-    print(f'Grassmannian distance between aligned projections: {linalg.norm((s*Q @ (Hx_sub.T @ Hx_L)) - (Hz_sub.T @ Hz_L))}') # Take distance between interpolated projections
+    # Compute subspace distances between embeddings
+    s = s.cpu().detach().numpy()
+    Q = Q.cpu().detach().numpy()
+    Hx_L = Hx_L.cpu().detach().numpy()
+    Hz_L = Hz_L.cpu().detach().numpy()
+    Hx_sub = Hx_sub.cpu().detach().numpy()
+    Hz_sub = Hz_sub.cpu().detach().numpy()
+    Hx_proj = Hx_proj.cpu().detach().numpy()
+    Hz_proj = Hz_proj.cpu().detach().numpy()
+    print(f'Subspace distance between unaligned projections: {linalg.norm(Hx_proj - Hz_proj)}')
+    print(f'Subspace distance between aligned projections: {linalg.norm((s*Q @ (Hx_sub.T @ Hx_L)) - (Hz_sub.T @ Hz_L))}') # Take distance between interpolated projections
 
     return Xa.cpu().detach().numpy(), Za.cpu().detach().numpy(), Ys_H.T, Yt_H.T
