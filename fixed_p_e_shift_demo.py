@@ -69,7 +69,7 @@ if __name__ == '__main__':
     #=======================================================================================#
     # Subspace Alignment
     #=======================================================================================#
-    Xsa_stream, Xta_seen, Ys_stream, Yt_seen = psa.streaming_procrustes_subspace_adaptation(X1_seen,X2_seen,Y1_seen,Y2_seen,t1_seen,t2_seen,window_length=5,k=5,interptype='removal')
+    Xsa_stream, Xta_seen, Ys_stream, Yt_seen, _, _, _ = psa.streaming_procrustes_subspace_adaptation(X1_seen,X2_seen,Y1_seen,Y2_seen,t1_seen,t2_seen,window_length=5,k=5,interptype='removal')
     Xsa, Xta, Ys, Yt = psa.batch_procrustes_subspace_adaptation(X1,X2,Y1,Y2,t1,t2,window_length=50,k=5)
 
     #=======================================================================================#

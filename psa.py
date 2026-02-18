@@ -313,4 +313,4 @@ def streaming_procrustes_subspace_adaptation(X, Z, Ys, Yt, ts, tt, window_length
     print(f'Subspace distance between unaligned projections: {linalg.norm(Hx_proj - Hz_proj)}')
     print(f'Subspace distance between aligned projections: {linalg.norm((s*Q @ (Hx_sub.T @ Hx_L)) - (Hz_sub.T @ Hz_L))}') # Take distance between interpolated projections
 
-    return Xa.cpu().detach().numpy(), Za.cpu().detach().numpy(), Ys_H.T, Yt_H.T
+    return Xa.cpu().detach().numpy(), Za.cpu().detach().numpy(), Ys_H.T, Yt_H.T, Hx_proj, Hz_proj, s*Q @ Hx_proj
