@@ -199,7 +199,7 @@ if __name__ == '__main__':
     ax1[0,1].plot(Ys,label="Validation actual",color='black')
     ax1[0,1].plot(Yspred_og,label="No adaptation",color='red')
     # ax1[0,1].plot(Yspred_da,label="Batch adapted",color='purple',alpha=0.25)
-    ax1[0,1].plot(Yspred_sda,label="Streaming adapted",color='darkorchid')
+    ax1[0,1].plot(Yspred_sda,label="Domain adapted",color='darkorchid')
     ax1[0,1].set_xlabel('Time Step')
     ax1[0,1].set_ylabel('Heat Rate (W/cm$^2$)')
     ax1[0,1].legend(fontsize=6.25,framealpha=0.5)
@@ -224,7 +224,7 @@ if __name__ == '__main__':
     ax1[1,1].plot(Yt,label="Operational actual",color='gray')
     ax1[1,1].plot(Ytpred_og,label="No adaptation",color='red')
     # ax1[1,1].plot(Ytpred_da,label="Batch adapted",color='purple',alpha=0.25)
-    ax1[1,1].plot(Ytpred_sda,label="Streaming adapted",color='darkorchid')
+    ax1[1,1].plot(Ytpred_sda,label="Domain adapted",color='darkorchid')
     ax1[1,1].set_xlabel('Time Step')
     ax1[1,1].set_ylabel('Heat Rate (W/cm$^2$)')
     ax1[1,1].legend(fontsize=6.25,framealpha=0.5)
@@ -235,25 +235,25 @@ if __name__ == '__main__':
     ax2[0,0].scatter(df1['rho'], df1['heat_rate'], s=2, label="Validation actual", color='black', rasterized=True)
     ax2[0,0].scatter(df1['rho'], Yspred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[0,0].scatter(df1['rho'], Yspred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[0,0].scatter(df1['rho'][0:valindex_seen], Yspred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[0,0].scatter(df1['rho'][0:valindex_seen], Yspred_sda, s=2, label="Domain adapted", color='darkorchid', rasterized=True)
     ax2[0,0].set_ylabel('Heat Rate (W/cm$^2$)') 
     ax2[0,0].legend(fontsize=6.25,framealpha=0.5)
 
     ax2[0,1].scatter(df1['T'], df1['heat_rate'], s=2, label="Validation actual", color='black', rasterized=True)
     ax2[0,1].scatter(df1['T'], Yspred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[0,1].scatter(df1['T'], Yspred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[0,1].scatter(df1['T'][0:valindex_seen], Yspred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[0,1].scatter(df1['T'][0:valindex_seen], Yspred_sda, s=2, label="Domain adapted", color='darkorchid', rasterized=True)
 
     ax2[0,2].scatter(df1['S'], df1['heat_rate'], s=2, label="Validation actual", color='black', rasterized=True)
     ax2[0,2].scatter(df1['S'], Yspred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[0,2].scatter(df1['S'], Yspred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[0,2].scatter(df1['S'][0:valindex_seen], Yspred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[0,2].scatter(df1['S'][0:valindex_seen], Yspred_sda, s=2, label="Domain adapted", color='darkorchid', rasterized=True)
 
     # Plotting state space in target domain
     ax2[1,0].scatter(df2['rho'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax2[1,0].scatter(df2['rho'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[1,0].scatter(df2['rho'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[1,0].scatter(df2['rho'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[1,0].scatter(df2['rho'][0:oprindex_seen], Ytpred_sda, s=2, label="Domain adapted", color='darkorchid', rasterized=True)
     ax2[1,0].set_xlabel('Atmospheric Density (kg/m$^3$)',labelpad=15)
     ax2[1,0].set_ylabel('Heat Rate (W/cm$^2$)') 
     ax2[1,0].legend(fontsize=6.25,framealpha=0.5)
@@ -261,18 +261,18 @@ if __name__ == '__main__':
     ax2[1,1].scatter(df2['T'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax2[1,1].scatter(df2['T'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[1,1].scatter(df2['T'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25, rasterized=True)
-    ax2[1,1].scatter(df2['T'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[1,1].scatter(df2['T'][0:oprindex_seen], Ytpred_sda, s=2, label="Domain adapted", color='darkorchid', rasterized=True)
     ax2[1,1].set_xlabel('Freestream Temperature (K)',labelpad=15)
 
     ax2[1,2].scatter(df2['S'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
     ax2[1,2].scatter(df2['S'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
     # ax2[1,2].scatter(df2['S'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
-    ax2[1,2].scatter(df2['S'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax2[1,2].scatter(df2['S'][0:oprindex_seen], Ytpred_sda, s=2, label="Domain adapted", color='darkorchid', rasterized=True)
     ax2[1,2].set_xlabel('Molecular Speed Ratio',labelpad=15)
     
 
     # Plotting state space in target domain
-    fig3, ax3 = plt.subplots(1,4,width_ratios=[1,1,1,1],figsize=(7,1.5)) # number of width ratios must match the number of columns of the grid
+    fig3, ax3 = plt.subplots(1,4,width_ratios=[1,1,1,1],figsize=(6,1.5)) # number of width ratios must match the number of columns of the grid
     fig3.tight_layout()
     plt.subplots_adjust(wspace=0.5)
 
@@ -294,24 +294,24 @@ if __name__ == '__main__':
     ax3[0].legend(fontsize=6.25,framealpha=0.5)
 
     # Plotting state space in target domain
-    ax3[1].scatter(df2['rho'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
-    ax3[1].scatter(df2['rho'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
+    ax3[1].scatter(df2['rho'], df2['heat_rate'], s=0.25, label="Operational actual", color='gray', rasterized=True)
+    ax3[1].scatter(df2['rho'], Ytpred_og, s=0.25, label="No adaptation", color='red', rasterized=True)
     # ax3[1].scatter(df2['rho'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
-    ax3[1].scatter(df2['rho'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax3[1].scatter(df2['rho'][0:oprindex_seen], Ytpred_sda, s=0.25, label="Domain adapted", color='darkorchid', rasterized=True)
     ax3[1].set_xlabel('Atmospheric\n Density (kg/m$^3$)',labelpad=15)
     ax3[1].set_ylabel('Heat Rate (W/cm$^2$)') 
     ax3[1].legend(fontsize=6.25,framealpha=0.5)
 
-    ax3[2].scatter(df2['T'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
-    ax3[2].scatter(df2['T'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
+    ax3[2].scatter(df2['T'], df2['heat_rate'], s=0.25, label="Operational actual", color='gray', rasterized=True)
+    ax3[2].scatter(df2['T'], Ytpred_og, s=0.25, label="No adaptation", color='red', rasterized=True)
     # ax3[2].scatter(df2['T'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
-    ax3[2].scatter(df2['T'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax3[2].scatter(df2['T'][0:oprindex_seen], Ytpred_sda, s=0.25, label="Domain adapted", color='darkorchid', rasterized=True)
     ax3[2].set_xlabel('Freestream\n Temperature (K)',labelpad=15)
 
-    ax3[3].scatter(df2['S'], df2['heat_rate'], s=2, label="Operational actual", color='gray', rasterized=True)
-    ax3[3].scatter(df2['S'], Ytpred_og, s=2, label="No adaptation", color='red', rasterized=True)
+    ax3[3].scatter(df2['S'], df2['heat_rate'], s=0.25, label="Operational actual", color='gray', rasterized=True)
+    ax3[3].scatter(df2['S'], Ytpred_og, s=0.25, label="No adaptation", color='red', rasterized=True)
     # ax3[3].scatter(df2['S'], Ytpred_da, s=2, label="Batch adapted", color='purple',alpha=0.25)
-    ax3[3].scatter(df2['S'][0:oprindex_seen], Ytpred_sda, s=2, label="Streaming adapted", color='darkorchid', rasterized=True)
+    ax3[3].scatter(df2['S'][0:oprindex_seen], Ytpred_sda, s=0.25, label="Domain adapted", color='darkorchid', rasterized=True)
     ax3[3].set_xlabel('Molecular\n Speed Ratio',labelpad=15)
     
 
