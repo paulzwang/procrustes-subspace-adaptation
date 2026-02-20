@@ -183,8 +183,8 @@ if __name__ == '__main__':
 
         """ Actual vs. Predicted and Heat Rate vs. Time """
         # Plotting in target domain
-        ax1[i,0].scatter(Ytpred_og,Yt,s=0.25,label=f"RMSE: {round(root_mean_squared_error(Yt, Ytpred_og),4)}",color='red', rasterized=True)
-        ax1[i,0].scatter(Ytpred_da,Yt,s=0.25,label=f"RMSE: {round(root_mean_squared_error(Yt, Ytpred_da),4)}",color='darkorchid', rasterized=True)
+        ax1[i,0].scatter(Ytpred_og,Yt,s=0.25,label=f"RMSE: {round(rmse_og,4)}",color='red', rasterized=True)
+        ax1[i,0].scatter(Ytpred_da,Yt,s=0.25,label=f"RMSE: {round(rmse_da,4)}",color='darkorchid', rasterized=True)
         # Plot line y=x, the ideal predicted vs. actual curve
         lims = [
             np.min([ax1[i,0].get_xlim(), ax1[i,0].get_ylim()]),  # min of both axes
