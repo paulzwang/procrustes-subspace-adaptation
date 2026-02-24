@@ -258,7 +258,6 @@ def streaming_procrustes_subspace_adaptation(X, Z, Ys, Yt, ts, tt, window_length
 
     # Plot manifolds
     if manifold_visual == True:
-        plot_manifolds(Xa,Za,Hx_proj,Hz_proj) # Interpolated data
         plot_manifolds(Xa,Za,Hx_sub.T@Hx,Hz_sub.T@Hz) # Non-interpolated data
 
     # Compute subspace distances between embeddings
