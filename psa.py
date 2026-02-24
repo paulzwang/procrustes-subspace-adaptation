@@ -7,8 +7,6 @@ import scipy.linalg as linalg
 from scipy.linalg import orth
 
 def interpolate_inputs(X,Z,ts,tt,interptype='time'):
-    visualization = False
-
     if interptype == 'time':
         """ Common Time Interpolation Scheme """
         big_time = np.unique(np.concatenate((ts,tt),axis=0))
@@ -16,15 +14,6 @@ def interpolate_inputs(X,Z,ts,tt,interptype='time'):
         bt = make_interp_spline(tt,Z)
         X_interp = bs(big_time)
         Z_interp = bt(big_time)
-
-        if visualization == True:
-            """ Visualizing interpolation """
-            plt.figure()
-            plt.scatter(big_time,X_interp[:,0],s=2,label='$X_s$')
-            plt.scatter(big_time,Z_interp[:,0],s=2,label='$X_t$')
-            plt.legend()
-            plt.show()
-
     elif interptype == 'removal':
         """ Removal of Zeros Interpolation Scheme """
         numpoints_remove = abs(len(ts)-len(tt))
@@ -37,16 +26,6 @@ def interpolate_inputs(X,Z,ts,tt,interptype='time'):
             Z_interp = Z
             ts_interp = np.delete(ts,indices_remove)
             tt_interp = tt
-            if visualization == True:
-                """ Visualizing interpolation """
-                plt.figure()
-                plt.scatter(ts[idx],X[idx,0],s=1)
-                plt.scatter(ts[idx_zeros],X[idx_zeros,0],s=2)
-                plt.figure()
-                plt.scatter(ts_interp, X_interp[:,0],s=2)
-                plt.scatter(tt_interp, Z_interp[:,0],s=2)
-                plt.scatter(ts[indices_remove],X[indices_remove,0],s=2,marker='x',color='red')
-                plt.show()
         else:
             # Remove zeros from Z
             idx = np.arange(Z[:,0].shape[0])
@@ -56,17 +35,6 @@ def interpolate_inputs(X,Z,ts,tt,interptype='time'):
             Z_interp = np.delete(Z,indices_remove,axis=0)
             ts_interp = ts
             tt_interp = np.delete(tt,indices_remove,axis=0)
-            if visualization == True:
-                """ Visualizing interpolation """
-                plt.figure()
-                plt.scatter(tt[idx_zeros],Z[idx_zeros,0],s=2)
-                plt.scatter(tt[idx],Z[idx,0],s=1)
-                plt.figure()
-                plt.scatter(ts_interp, X_interp[:,0],s=2)
-                plt.scatter(tt_interp, Z_interp[:,0],s=2)
-                plt.scatter(tt[indices_remove],Z[indices_remove,0],s=2,marker='x',color='red')
-                plt.show()
-
     else:
         """ Common Time Interpolation Scheme """
         big_time = np.unique(np.concatenate((ts,tt),axis=0))
@@ -74,14 +42,6 @@ def interpolate_inputs(X,Z,ts,tt,interptype='time'):
         bt = make_interp_spline(tt,Z)
         X_interp = bs(big_time)
         Z_interp = bt(big_time)
-        
-        if visualization == True:
-            """ Visualizing interpolation """
-            plt.figure()
-            plt.scatter(big_time,X_interp[:,0],s=2,label='$X_s$')
-            plt.scatter(big_time,Z_interp[:,0],s=2,label='$X_t$')
-            plt.legend()
-            plt.show()
     return X_interp, Z_interp
 
 def find_trajectory_matrix(time_series,window_length):
