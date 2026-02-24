@@ -2,12 +2,13 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
+from sklearn.manifold import MDS
 from scipy.interpolate import make_interp_spline
 import scipy.linalg as linalg
 from scipy.linalg import orth
 
 def interpolate_inputs(X,Z,ts,tt,interptype='time'):
-    visualization = True
+    visualization = False
 
     if interptype == 'time':
         """ Common Time Interpolation Scheme """
@@ -20,17 +21,17 @@ def interpolate_inputs(X,Z,ts,tt,interptype='time'):
         if visualization == True:
             """ Visualizing interpolation """
             plt.figure()
-            plt.scatter(big_time,X_interp[:,0],s=2,label='$X_s$')
-            plt.scatter(big_time,Z_interp[:,0],s=2,label='$X_t$')
+            plt.scatter(big_time,X_interp[:,0],s=0.25,label='$X$')
+            plt.scatter(big_time,Z_interp[:,0],s=0.25,label='$Z$')
             plt.legend()
 
-            fig, ax = plt.subplots(1,3,figsize=(6,2),layout='constrained')
-            ax[0].hist(X[:,0],density=True,histtype='step',bins=20,label=r'$\rho$')
-            ax[0].hist(X_interp[:,0],density=True,histtype='step',bins=20,label=r'Interpolated $\rho$')
-            ax[1].hist(X[:,1],density=True,histtype='step',bins=20,label=r'$T$')
-            ax[1].hist(X_interp[:,1],density=True,histtype='step',bins=20,label=r'Interpolated $T$')
-            ax[2].hist(X[:,2],density=True,histtype='step',bins=20,label=r'$S$')
-            ax[2].hist(X_interp[:,2],density=True,histtype='step',bins=20,label=r'Interpolated $S$')
+            fig1, ax1 = plt.subplots(1,3,figsize=(6,2),layout='constrained')
+            ax1[0].hist(X[:,0],density=True,histtype='step',bins=20,label=r'$\rho$')
+            ax1[0].hist(X_interp[:,0],density=True,histtype='step',bins=20,label=r'Interpolated $\rho$')
+            ax1[1].hist(X[:,1],density=True,histtype='step',bins=20,label=r'$T$')
+            ax1[1].hist(X_interp[:,1],density=True,histtype='step',bins=20,label=r'Interpolated $T$')
+            ax1[2].hist(X[:,2],density=True,histtype='step',bins=20,label=r'$S$')
+            ax1[2].hist(X_interp[:,2],density=True,histtype='step',bins=20,label=r'Interpolated $S$')
             print('Number of zeros in Z:', np.sum(Z[:,0] <= 0))
             print('Number of nonzeros in Z:', np.sum(Z[:,0] > 0))
             print('Number of zeros in Z_interp:', np.sum(Z_interp[:,0] <= 0))
@@ -49,30 +50,6 @@ def interpolate_inputs(X,Z,ts,tt,interptype='time'):
             Z_interp = Z
             ts_interp = np.delete(ts,indices_remove)
             tt_interp = tt
-            if visualization == True:
-                """ Visualizing interpolation """
-                plt.figure()
-                plt.scatter(ts[idx],X[idx,0],s=1)
-                plt.scatter(ts[idx_zeros],X[idx_zeros,0],s=2)
-                plt.figure()
-                plt.scatter(ts_interp, X_interp[:,0],s=2)
-                plt.scatter(tt_interp, Z_interp[:,0],s=2)
-                plt.scatter(ts[indices_remove],X[indices_remove,0],s=2,marker='x',color='red')
-
-                fig, ax = plt.subplots(1,3,figsize=(6,2),layout='constrained')
-                ax[0].hist(X[:,0],density=True,histtype='step',bins=20,label=r'$\rho$')
-                ax[0].hist(X_interp[:,0],density=True,histtype='step',bins=20,label=r'Interpolated $\rho$')
-                ax[1].hist(X[:,1],density=True,histtype='step',bins=20,label=r'$T$')
-                ax[1].hist(X_interp[:,1],density=True,histtype='step',bins=20,label=r'Interpolated $T$')
-                ax[2].hist(X[:,2],density=True,histtype='step',bins=20,label=r'$S$')
-                ax[2].hist(X_interp[:,2],density=True,histtype='step',bins=20,label=r'Interpolated $S$')
-                print('Number of zeros in Z:', np.sum(Z[:,0] <= 0))
-                print('Number of nonzeros in Z:', np.sum(Z[:,0] > 0))
-                print('Number of zeros in Z_interp:', np.sum(Z_interp[:,0] <= 0))
-                print('Number of nonzeros in Z_interp:', np.sum(Z_interp[:,0] > 0))
-
-                plt.show()
-
         else:
             # Remove zeros from Z
             idx = np.arange(Z[:,0].shape[0])
@@ -82,29 +59,30 @@ def interpolate_inputs(X,Z,ts,tt,interptype='time'):
             Z_interp = np.delete(Z,indices_remove,axis=0)
             ts_interp = ts
             tt_interp = np.delete(tt,indices_remove,axis=0)
-            if visualization == True:
-                """ Visualizing interpolation """
-                plt.figure()
-                plt.scatter(tt[idx_zeros],Z[idx_zeros,0],s=2)
-                plt.scatter(tt[idx],Z[idx,0],s=1)
-                plt.figure()
-                plt.scatter(ts_interp, X_interp[:,0],s=2)
-                plt.scatter(tt_interp, Z_interp[:,0],s=2)
-                plt.scatter(tt[indices_remove],Z[indices_remove,0],s=2,marker='x',color='red')
 
-                fig, ax = plt.subplots(1,3,figsize=(6,2),layout='constrained')
-                ax[0].hist(X[:,0],density=True,histtype='step',bins=20,label=r'$\rho$')
-                ax[0].hist(X_interp[:,0],density=True,histtype='step',bins=20,label=r'Interpolated $\rho$')
-                ax[1].hist(X[:,1],density=True,histtype='step',bins=20,label=r'$T$')
-                ax[1].hist(X_interp[:,1],density=True,histtype='step',bins=20,label=r'Interpolated $T$')
-                ax[2].hist(X[:,2],density=True,histtype='step',bins=20,label=r'$S$')
-                ax[2].hist(X_interp[:,2],density=True,histtype='step',bins=20,label=r'Interpolated $S$')
-                print('Number of zeros in Z:', np.sum(Z[:,0] <= 0))
-                print('Number of nonzeros in Z:', np.sum(Z[:,0] > 0))
-                print('Number of zeros in Z_interp:', np.sum(Z_interp[:,0] <= 0))
-                print('Number of nonzeros in Z_interp:', np.sum(Z_interp[:,0] > 0))
+        if visualization == True:
+            """ Visualizing interpolation """
+            plt.figure()
+            plt.scatter(tt[idx_zeros],Z[idx_zeros,0],s=2)
+            plt.scatter(tt[idx],Z[idx,0],s=1)
+            plt.figure()
+            plt.scatter(ts_interp, X_interp[:,0],s=2)
+            plt.scatter(tt_interp, Z_interp[:,0],s=2)
+            plt.scatter(tt[indices_remove],Z[indices_remove,0],s=2,marker='x',color='red')
 
-                plt.show()
+            fig, ax = plt.subplots(1,3,figsize=(6,2),layout='constrained')
+            ax[0].hist(X[:,0],density=True,histtype='step',bins=20,label=r'$\rho$')
+            ax[0].hist(X_interp[:,0],density=True,histtype='step',bins=20,label=r'Interpolated $\rho$')
+            ax[1].hist(X[:,1],density=True,histtype='step',bins=20,label=r'$T$')
+            ax[1].hist(X_interp[:,1],density=True,histtype='step',bins=20,label=r'Interpolated $T$')
+            ax[2].hist(X[:,2],density=True,histtype='step',bins=20,label=r'$S$')
+            ax[2].hist(X_interp[:,2],density=True,histtype='step',bins=20,label=r'Interpolated $S$')
+            print('Number of zeros in Z:', np.sum(Z[:,0] <= 0))
+            print('Number of nonzeros in Z:', np.sum(Z[:,0] > 0))
+            print('Number of zeros in Z_interp:', np.sum(Z_interp[:,0] <= 0))
+            print('Number of nonzeros in Z_interp:', np.sum(Z_interp[:,0] > 0))
+
+            plt.show()
 
     else:
         """ Common Time Interpolation Scheme """
@@ -113,14 +91,7 @@ def interpolate_inputs(X,Z,ts,tt,interptype='time'):
         bt = make_interp_spline(tt,Z)
         X_interp = bs(big_time)
         Z_interp = bt(big_time)
-        
-        if visualization == True:
-            """ Visualizing interpolation """
-            plt.figure()
-            plt.scatter(big_time,X_interp[:,0],s=2,label='$X_s$')
-            plt.scatter(big_time,Z_interp[:,0],s=2,label='$X_t$')
-            plt.legend()
-            plt.show()
+
     return X_interp, Z_interp
 
 def find_trajectory_matrix(time_series,window_length):

@@ -17,12 +17,13 @@ interptype = 'time'
 if __name__ == '__main__':
     # Semimajor axis "a" is fixed. Eccentricity "e" is different between missions
     mission1_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
-    mission2_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11667_rp=100.0\Results_ctrl=0_ra=11667_rp=100.0_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11667_rp=100.0\Results_ctrl=0_ra=11667_rp=100.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11498_rp=100.0\Results_ctrl=0_ra=11498_rp=100.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11334_rp=100.0\Results_ctrl=0_ra=11334_rp=100.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11174_rp=100.1\Results_ctrl=0_ra=11174_rp=100.1_hl=0.150_90.0deg.csv'
 
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
+    mission2_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12003_rp=96.8\Results_ctrl=0_ra=12003_rp=96.8_hl=0.150_90.0deg.csv'
 
     # utils.plot_domain_visualization(mission1_data_directory,mission2_data_directory)
 
