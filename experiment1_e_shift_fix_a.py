@@ -93,7 +93,7 @@ if __name__ == '__main__':
         #=======================================================================================#
         window_length = 5 # 50
         k = 5 # subspace rank
-        Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,window_length,k,interptype='time')
+        Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,window_length,k,interptype='time')
 
         #=======================================================================================#
         # Data Preprocessing
