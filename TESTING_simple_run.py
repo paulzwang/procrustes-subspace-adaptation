@@ -24,7 +24,7 @@ def read_data(data_directory):
     return df, t, X, Y
 
 def partition_data(percent_seen,t1,X1,Y1,t2,X2,Y2):
-    index_seen2 = round(percent_seen*t2.shape[0])
+    index_seen2 = round(percent_seen*(t2.shape[0]-1))
     index_seen1 = np.argmin(np.abs(t1 - t2[index_seen2])) # Get time of percent seen
     # Split the data into seen/unseen
     t2_seen = t2[0:index_seen2]
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     df2, t2, X2, Y2 = read_data(mission2_data_directory)
 
     # Specify up to which data point is seen by the model
-    percent_seen = 1
+    percent_seen = 0.41
     list_rmse_og = []
     list_rmse_da = []
     list_r2_og = []
@@ -193,6 +193,22 @@ if __name__ == '__main__':
     #=======================================================================================#
     # Plotting
     #=======================================================================================#
+    fig0, ax0 = plt.subplots(1,2,subplot_kw=dict(projection='3d'),figsize=(6,3),layout='constrained') # manifolds
+    scolors = Hx_proj[2,:] #np.linspace(0,Hx_proj.shape[1],num=Hx_proj.shape[1])
+    tcolors = Hz_proj[2,:] #np.linspace(0,Hz_proj.shape[1],num=Hz_proj.shape[1])
+    ax0[0].scatter(Hx_proj[0,:],Hx_proj[1,:],Hx_proj[2,:],s=4,marker='.',c=scolors,cmap='viridis',label='$H_{X,\mathrm{proj}}$',rasterized=True,depthshade=False)
+    ax0[0].scatter(Hz_proj[0,:],Hz_proj[1,:],Hz_proj[2,:],s=4,marker='.',c=tcolors,cmap='plasma',label='$H_{Z,\mathrm{proj}}$',rasterized=True,depthshade=False)
+    ax0[0].legend(loc='upper left',framealpha=0.5)
+    ax0[0].tick_params(pad=-5)
+
+    scolors = Xa[:,2] #np.linspace(0,Xa.shape[0],num=Xa.shape[0])
+    tcolors = Za[:,2] #np.linspace(0,Za.shape[0],num=Za.shape[0])
+    ax0[1].scatter(Xa[:,0],Xa[:,1],Xa[:,2],s=4,marker='.',c=scolors,cmap='viridis',label='$X_a$',rasterized=True,depthshade=False)
+    ax0[1].scatter(Za[:,0],Za[:,1],Za[:,2],s=4,marker='.',c=tcolors,cmap='plasma',label='$Z_a$',rasterized=True,depthshade=False)
+    ax0[1].legend(loc='upper left',framealpha=0.5)
+    ax0[1].tick_params(pad=-5)
+    plt.show()
+
     fig1, ax1 = plt.subplots(1,2,width_ratios=[0.4,1],layout='constrained')
     # Target Domain
     ax1[0].scatter(Ytpred_og,Y2,s=2,label=f"RMSE: {round(rmse_og,4)}",color='red', rasterized=True)
@@ -216,5 +232,3 @@ if __name__ == '__main__':
     ax1[1].set_xlabel('Time Step')
     ax1[1].set_ylabel('Heat Rate (W/cm$^2$)')
     ax1[1].legend(fontsize=6.25,framealpha=0.5)
-
-    plt.show()
