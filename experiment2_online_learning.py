@@ -24,7 +24,7 @@ def read_data(data_directory):
     return df, t, X, Y
 
 def partition_data(percent_seen,t1,X1,Y1,t2,X2,Y2):
-    index_seen2 = round(percent_seen*t2.shape[0])
+    index_seen2 = round(percent_seen*(t2.shape[0]-1))
     index_seen1 = np.argmin(np.abs(t1 - t2[index_seen2])) # Get time of percent seen
     # Split the data into seen/unseen
     t2_seen = t2[0:index_seen2]
@@ -151,7 +151,7 @@ if __name__ == '__main__':
         model_og = NeuralNetwork(input_size=X1_torch.size(1), hidden_sizes=hidden_sizes, output_size=Y1_torch.size(1)).to(device)
         model_da = NeuralNetwork(input_size=Xa_torch.size(1), hidden_sizes=hidden_sizes, output_size=Ys_torch.size(1)).to(device)
 
-        loss_og = train_model(model_og,X1_seen_torch,Y1_seen_torch,num_epochs,learning_rate)
+        loss_og = train_model(model_og,X1_torch,Y1_torch,num_epochs,learning_rate)
         loss_da = train_model(model_da,Xa_torch,Ys_torch,num_epochs,learning_rate,weight_decay=0) # Note the change in L2 regularizer
 
 

@@ -24,7 +24,7 @@ def read_data(data_directory):
     return df, t, X, Y
 
 def partition_data(percent_seen,t1,X1,Y1,t2,X2,Y2):
-    index_seen2 = round(percent_seen*t2.shape[0]-1)
+    index_seen2 = round(percent_seen*(t2.shape[0]-1))
     index_seen1 = np.argmin(np.abs(t1 - t2[index_seen2])) # Get time of percent seen
     # Split the data into seen/unseen
     t2_seen = t2[0:index_seen2]
