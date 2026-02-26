@@ -21,7 +21,6 @@ def read_data(data_directory):
     return df, t, X, Y
 
 if __name__ == '__main__':
-    # rp is different between missions
     mission1_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
     mission2_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11667_rp=100.0\Results_ctrl=0_ra=11667_rp=100.0_hl=0.150_90.0deg.csv'
     mission3_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11498_rp=100.0\Results_ctrl=0_ra=11498_rp=100.0_hl=0.150_90.0deg.csv'

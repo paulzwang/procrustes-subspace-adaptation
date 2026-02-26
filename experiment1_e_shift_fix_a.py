@@ -21,7 +21,6 @@ def read_data(data_directory):
     return df, t, X, Y
 
 if __name__ == '__main__':
-    # rp is different between missions
     mission1_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
     mission2_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12003_rp=96.8\Results_ctrl=0_ra=12003_rp=96.8_hl=0.150_90.0deg.csv'
     mission3_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12004_rp=95.3\Results_ctrl=0_ra=12004_rp=95.3_hl=0.150_90.0deg.csv'
@@ -39,7 +38,7 @@ if __name__ == '__main__':
                   r'$e=0.98475$ km', 
                   r'$e=0.98450$ km', 
                   r'$e=0.98425$ km', 
-                  r'$e=0.98400$ km'] # Model training performed on descending shifts
+                  r'$e=0.98400$ km'] # Model training performed on ascending shifts
 
     # Read data from CSV
     df1, t1, X1, Y1 = read_data(mission1_data_directory)
