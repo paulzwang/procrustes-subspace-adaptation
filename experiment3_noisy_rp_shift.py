@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     # Read data and add noise from CSV
     noiselevel = 0.05
-    df1, t1, X1, Y1 = read_noisy_data(mission1_data_directory,noiselevel)
+    df1, t1, X1, Y1 = read_noisy_data(mission1_data_directory,noiselevel=0)
     df2, t2, X2, Y2 = read_noisy_data(mission2_data_directory,noiselevel)
     df3, t3, X3, Y3 = read_noisy_data(mission3_data_directory,noiselevel)
     df4, t4, X4, Y4 = read_noisy_data(mission4_data_directory,noiselevel)
@@ -106,7 +106,8 @@ if __name__ == '__main__':
         #=======================================================================================#
         window_length = 5 # 50
         k = 5 # subspace rank
-        Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,window_length,k,interptype='time')
+        Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,
+                                                                                                                 window_length,k,interptype='time')
 
         #=======================================================================================#
         # Data Preprocessing
@@ -317,10 +318,10 @@ if __name__ == '__main__':
     ax6[2].legend(framealpha=0.5,fontsize=6.25)
 
 
-    fig0.savefig('experimental_plots/noisy_increasing_rp_shifts_dataviz.pdf', format='pdf')
-    fig1.savefig('experimental_plots/noisy_increasing_rp_shifts_heatratevstime.pdf', format='pdf')
-    fig2.savefig('experimental_plots/noisy_increasing_rp_shifts_statespacecomparison.pdf', format='pdf')
-    fig3.savefig('experimental_plots/noisy_increasing_rp_shifts_statespaceprediction.pdf', format='pdf')
-    fig4.savefig('experimental_plots/noisy_increasing_rp_shifts_manifolds1.pdf', format='pdf')
-    fig5.savefig('experimental_plots/noisy_increasing_rp_shifts_manifolds2.pdf', format='pdf')
-    fig6.savefig('experimental_plots/noisy_increasing_rp_shifts_metrics.pdf', format='pdf')
+    fig0.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_dataviz.pdf', format='pdf')
+    fig1.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_heatratevstime.pdf', format='pdf')
+    fig2.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_statespacecomparison.pdf', format='pdf')
+    fig3.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_statespaceprediction.pdf', format='pdf')
+    fig4.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_manifolds1.pdf', format='pdf')
+    fig5.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_manifolds2.pdf', format='pdf')
+    fig6.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_metrics.pdf', format='pdf')

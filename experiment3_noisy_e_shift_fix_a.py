@@ -5,6 +5,7 @@ plt.style.use(r'matplotlib_stylesheet\journal_nolatex.mplstyle')
 import utils
 from utils import NeuralNetwork
 from utils import train_model
+from utils import add_percent_noise
 import psa
 
 import torch 
@@ -20,35 +21,50 @@ def read_data(data_directory):
     Y = np.array(df['heat_rate']).reshape(-1,1)
     return df, t, X, Y
 
-if __name__ == '__main__':
-    mission1_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
-    mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
-    mission3_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=96.0\Results_ctrl=0_ra=12000_rp=96.0_hl=0.150_90.0deg.csv'
-    mission4_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=95.0\Results_ctrl=0_ra=12000_rp=95.0_hl=0.150_90.0deg.csv'
-    mission5_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=94.0\Results_ctrl=0_ra=12000_rp=94.0_hl=0.150_90.0deg.csv'
-    mission6_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=93.0\Results_ctrl=0_ra=12000_rp=93.0_hl=0.150_90.0deg.csv'
-    mission7_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=92.0\Results_ctrl=0_ra=12000_rp=92.0_hl=0.150_90.0deg.csv'
-    mission8_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=91.0\Results_ctrl=0_ra=12000_rp=91.0_hl=0.150_90.0deg.csv'
-    mission9_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=90.0\Results_ctrl=0_ra=12000_rp=90.0_hl=0.150_90.0deg.csv'
-    shift_list = [r'$r_p=90$ km', 
-                  r'$r_p=91$ km', 
-                  r'$r_p=92$ km', 
-                  r'$r_p=93$ km', 
-                  r'$r_p=94$ km', 
-                  r'$r_p=95$ km', 
-                  r'$r_p=96$ km', 
-                  r'$r_p=97$ km'] # Model training performed on descending shifts
+def read_noisy_data(data_directory,noiselevel):
+    df = pd.read_csv(data_directory).drop_duplicates(subset=['time'], keep='first')
+    t = np.array(df['time'])
 
-    # Read data from CSV
-    df1, t1, X1, Y1 = read_data(mission1_data_directory)
-    df2, t2, X2, Y2 = read_data(mission2_data_directory)
-    df3, t3, X3, Y3 = read_data(mission3_data_directory)
-    df4, t4, X4, Y4 = read_data(mission4_data_directory)
-    df5, t5, X5, Y5 = read_data(mission5_data_directory)
-    df6, t6, X6, Y6 = read_data(mission6_data_directory)
-    df7, t7, X7, Y7 = read_data(mission7_data_directory)
-    df8, t8, X8, Y8 = read_data(mission8_data_directory)
-    df9, t9, X9, Y9 = read_data(mission9_data_directory)
+    noisy_rho = add_percent_noise(np.array(df['rho']).reshape(-1,1),percent_noise=noiselevel)
+    noisy_T = add_percent_noise(np.array(df['T']).reshape(-1,1),percent_noise=noiselevel)
+    noisy_S = add_percent_noise(np.array(df['S']).reshape(-1,1),percent_noise=noiselevel)
+
+    X = np.concatenate((noisy_rho,noisy_T,noisy_S),axis=1)
+    Y = np.array(df['heat_rate']).reshape(-1,1)
+    return df, t, X, Y
+
+
+if __name__ == '__main__':
+    mission1_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
+    mission2_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12003_rp=96.8\Results_ctrl=0_ra=12003_rp=96.8_hl=0.150_90.0deg.csv'
+    mission3_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12004_rp=95.3\Results_ctrl=0_ra=12004_rp=95.3_hl=0.150_90.0deg.csv'
+    mission4_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12006_rp=93.8\Results_ctrl=0_ra=12006_rp=93.8_hl=0.150_90.0deg.csv'
+    mission5_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12007_rp=92.3\Results_ctrl=0_ra=12007_rp=92.3_hl=0.150_90.0deg.csv'
+    mission6_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12009_rp=90.8\Results_ctrl=0_ra=12009_rp=90.8_hl=0.150_90.0deg.csv'
+    mission7_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12010_rp=89.2\Results_ctrl=0_ra=12010_rp=89.2_hl=0.150_90.0deg.csv'
+    mission8_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12012_rp=87.7\Results_ctrl=0_ra=12012_rp=87.7_hl=0.150_90.0deg.csv'
+    mission9_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12013_rp=86.2\Results_ctrl=0_ra=12013_rp=86.2_hl=0.150_90.0deg.csv'
+
+    shift_list = [r'$e=0.98575$ km', 
+                  r'$e=0.98550$ km', 
+                  r'$e=0.98525$ km', 
+                  r'$e=0.98500$ km', 
+                  r'$e=0.98475$ km', 
+                  r'$e=0.98450$ km', 
+                  r'$e=0.98425$ km', 
+                  r'$e=0.98400$ km'] # Model training performed on ascending shifts
+
+    # Read data and add noise from CSV
+    noiselevel = 0.01
+    df1, t1, X1, Y1 = read_noisy_data(mission1_data_directory,noiselevel=0)
+    df2, t2, X2, Y2 = read_noisy_data(mission2_data_directory,noiselevel)
+    df3, t3, X3, Y3 = read_noisy_data(mission3_data_directory,noiselevel)
+    df4, t4, X4, Y4 = read_noisy_data(mission4_data_directory,noiselevel)
+    df5, t5, X5, Y5 = read_noisy_data(mission5_data_directory,noiselevel)
+    df6, t6, X6, Y6 = read_noisy_data(mission6_data_directory,noiselevel)
+    df7, t7, X7, Y7 = read_noisy_data(mission7_data_directory,noiselevel)
+    df8, t8, X8, Y8 = read_noisy_data(mission8_data_directory,noiselevel)
+    df9, t9, X9, Y9 = read_noisy_data(mission9_data_directory,noiselevel)
 
     inputdomain_list = [X9, X8, X7, X6, X5, X4, X3, X2]
     outputdomain_list = [Y9, Y8, Y7, Y6, Y5, Y4, Y3, Y2]
@@ -91,7 +107,8 @@ if __name__ == '__main__':
         #=======================================================================================#
         window_length = 5 # 50
         k = 5 # subspace rank
-        Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,window_length,k,interptype='time')
+        Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,
+                                                                                                                 window_length,k,interptype='time')
 
         #=======================================================================================#
         # Data Preprocessing
@@ -302,10 +319,10 @@ if __name__ == '__main__':
     ax6[2].legend(framealpha=0.5,fontsize=6.25)
 
 
-    fig0.savefig('experimental_plots/batch_adaptation/increasing_rp_shifts_dataviz.pdf', format='pdf')
-    fig1.savefig('experimental_plots/batch_adaptation/increasing_rp_shifts_heatratevstime.pdf', format='pdf')
-    fig2.savefig('experimental_plots/batch_adaptation/increasing_rp_shifts_statespacecomparison.pdf', format='pdf')
-    fig3.savefig('experimental_plots/batch_adaptation/increasing_rp_shifts_statespaceprediction.pdf', format='pdf')
-    fig4.savefig('experimental_plots/batch_adaptation/increasing_rp_shifts_manifolds1.pdf', format='pdf')
-    fig5.savefig('experimental_plots/batch_adaptation/increasing_rp_shifts_manifolds2.pdf', format='pdf')
-    fig6.savefig('experimental_plots/batch_adaptation/increasing_rp_shifts_metrics.pdf', format='pdf')
+    fig0.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_dataviz.pdf', format='pdf')
+    fig1.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_heatratevstime.pdf', format='pdf')
+    fig2.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_statespacecomparison.pdf', format='pdf')
+    fig3.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_statespaceprediction.pdf', format='pdf')
+    fig4.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_manifolds1.pdf', format='pdf')
+    fig5.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_manifolds2.pdf', format='pdf')
+    fig6.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_metrics.pdf', format='pdf')

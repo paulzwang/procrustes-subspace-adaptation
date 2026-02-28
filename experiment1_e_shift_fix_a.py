@@ -303,10 +303,10 @@ if __name__ == '__main__':
     ax6[2].legend(framealpha=0.5,fontsize=6.25)
 
 
-    fig0.savefig('experimental_plots/fixed_a_increasing_e_shifts_dataviz.pdf', format='pdf')
-    fig1.savefig('experimental_plots/fixed_a_increasing_e_shifts_heatratevstime.pdf', format='pdf')
-    fig2.savefig('experimental_plots/fixed_a_increasing_e_shifts_statespacecomparison.pdf', format='pdf')
-    fig3.savefig('experimental_plots/fixed_a_increasing_e_shifts_statespaceprediction.pdf', format='pdf')
-    fig4.savefig('experimental_plots/fixed_a_increasing_e_shifts_manifolds1.pdf', format='pdf')
-    fig5.savefig('experimental_plots/fixed_a_increasing_e_shifts_manifolds2.pdf', format='pdf')
-    fig6.savefig('experimental_plots/fixed_a_increasing_e_shifts_metrics.pdf', format='pdf')
+    fig0.savefig('experimental_plots/batch_adaptation/fixed_a_increasing_e_shifts_dataviz.pdf', format='pdf')
+    fig1.savefig('experimental_plots/batch_adaptation/fixed_a_increasing_e_shifts_heatratevstime.pdf', format='pdf')
+    fig2.savefig('experimental_plots/batch_adaptation/fixed_a_increasing_e_shifts_statespacecomparison.pdf', format='pdf')
+    fig3.savefig('experimental_plots/batch_adaptation/fixed_a_increasing_e_shifts_statespaceprediction.pdf', format='pdf')
+    fig4.savefig('experimental_plots/batch_adaptation/fixed_a_increasing_e_shifts_manifolds1.pdf', format='pdf')
+    fig5.savefig('experimental_plots/batch_adaptation/fixed_a_increasing_e_shifts_manifolds2.pdf', format='pdf')
+    fig6.savefig('experimental_plots/batch_adaptation/fixed_a_increasing_e_shifts_metrics.pdf', format='pdf')

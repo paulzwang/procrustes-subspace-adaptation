@@ -251,4 +251,4 @@ if __name__ == '__main__':
             ax0[i,2].legend(framealpha=0.5,fontsize=6.25)
 
 
-    fig0.savefig('experimental_plots/fixed_a_increasing_e_shifts_online_metrics.pdf', format='pdf')
+    fig0.savefig('experimental_plots/online_learning/fixed_a_increasing_e_shifts_online_metrics.pdf', format='pdf')
