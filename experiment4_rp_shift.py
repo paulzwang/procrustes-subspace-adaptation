@@ -22,22 +22,23 @@ def read_data(data_directory):
 
 if __name__ == '__main__':
     mission1_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
-    mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
-    mission3_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=96.0\Results_ctrl=0_ra=12000_rp=96.0_hl=0.150_90.0deg.csv'
-    mission4_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=95.0\Results_ctrl=0_ra=12000_rp=95.0_hl=0.150_90.0deg.csv'
-    mission5_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=94.0\Results_ctrl=0_ra=12000_rp=94.0_hl=0.150_90.0deg.csv'
-    mission6_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=93.0\Results_ctrl=0_ra=12000_rp=93.0_hl=0.150_90.0deg.csv'
-    mission7_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=92.0\Results_ctrl=0_ra=12000_rp=92.0_hl=0.150_90.0deg.csv'
-    mission8_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=91.0\Results_ctrl=0_ra=12000_rp=91.0_hl=0.150_90.0deg.csv'
-    mission9_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=90.0\Results_ctrl=0_ra=12000_rp=90.0_hl=0.150_90.0deg.csv'
-    shift_list = [r'$r_p=90$ km', 
-                  r'$r_p=91$ km', 
-                  r'$r_p=92$ km', 
-                  r'$r_p=93$ km', 
-                  r'$r_p=94$ km', 
-                  r'$r_p=95$ km', 
-                  r'$r_p=96$ km', 
-                  r'$r_p=97$ km'] # Model training performed on descending shifts
+    mission2_data_directory = r'data\periapsis_shift\1orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
+    mission3_data_directory = r'data\periapsis_shift\2orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
+    mission4_data_directory = r'data\periapsis_shift\3orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
+    mission5_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
+    mission6_data_directory = r'data\periapsis_shift\5orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
+    mission7_data_directory = r'data\periapsis_shift\6orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
+    mission8_data_directory = r'data\periapsis_shift\7orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
+    mission9_data_directory = r'data\periapsis_shift\8orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
+
+    shift_list = [r'$8$ orbits', 
+                  r'$7$ orbits', 
+                  r'$6$ orbits', 
+                  r'$5$ orbits', 
+                  r'$4$ orbits', 
+                  r'$3$ orbits', 
+                  r'$2$ orbits', 
+                  r'$1$ orbit']
 
     # Read data from CSV
     df1, t1, X1, Y1 = read_data(mission1_data_directory)
@@ -92,7 +93,7 @@ if __name__ == '__main__':
         window_length = 5 # 50
         k = 5 # subspace rank
         Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,
-                                                                                                                 window_length,k,interptype='removal')
+                                                                                                                 window_length,k,interptype='time')
 
         #=======================================================================================#
         # Data Preprocessing
@@ -165,14 +166,14 @@ if __name__ == '__main__':
         heatt = outputdomain_list[i]
 
         """ Input Domains and Shift Visualization """
-        ax0[0].plot(t_list[i], rhot, label=shift_list[i], color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i]))) # Line color is in RGB, iterations increase green and decrease blue
-        ax0[1].plot(t_list[i], Tt, label=shift_list[i], color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])))
-        ax0[2].plot(t_list[i], St, label=shift_list[i], color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])))
-        ax0[3].plot(t_list[i], heatt, label=shift_list[i], color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])))
+        ax0[0].plot(t_list[i], rhot, label=shift_list[i], zorder=i+1, color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i]))) # Line color is in RGB, iterations increase green and decrease blue
+        ax0[1].plot(t_list[i], Tt, label=shift_list[i], zorder=i+1, color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])))
+        ax0[2].plot(t_list[i], St, label=shift_list[i], zorder=i+1, color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])))
+        ax0[3].plot(t_list[i], heatt, label=shift_list[i], zorder=i+1, color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])))
         if i == len(inputdomain_list)-1:
-            ax0[0].plot(df1['time'], df1['rho'], label="Validation domain", color='0')
-            ax0[1].plot(df1['time'], df1['T'], label="Validation domain",  color='0')
-            ax0[2].plot(df1['time'], df1['S'], label="Validation domain", color='0')
+            ax0[0].plot(df1['time'], df1['rho'], zorder=0, label="Validation domain", color='0')
+            ax0[1].plot(df1['time'], df1['T'], zorder=0, label="Validation domain",  color='0')
+            ax0[2].plot(df1['time'], df1['S'], zorder=0, label="Validation domain", color='0')
             ax0[3].plot(df1['time'], df1['heat_rate'], label="Validation domain", color='0')
             ax0[0].set_ylabel('Atmospheric\nDensity (kg/m$^3$)') 
             ax0[1].set_ylabel('Freestream\nTemperature (K)') 
@@ -303,10 +304,10 @@ if __name__ == '__main__':
     ax6[2].legend(framealpha=0.5,fontsize=6.25)
 
 
-    fig0.savefig('experimental_plots/supplementary/increasing_rp_shifts_dataviz.pdf', format='pdf')
-    fig1.savefig('experimental_plots/supplementary/increasing_rp_shifts_heatratevstime.pdf', format='pdf')
-    fig2.savefig('experimental_plots/supplementary/increasing_rp_shifts_statespacecomparison.pdf', format='pdf')
-    fig3.savefig('experimental_plots/supplementary/increasing_rp_shifts_statespaceprediction.pdf', format='pdf')
-    fig4.savefig('experimental_plots/supplementary/increasing_rp_shifts_manifolds1.pdf', format='pdf')
-    fig5.savefig('experimental_plots/supplementary/increasing_rp_shifts_manifolds2.pdf', format='pdf')
-    fig6.savefig('experimental_plots/supplementary/increasing_rp_shifts_metrics.pdf', format='pdf')
+    fig0.savefig('experimental_plots/supplementary/increasing_orbits_dataviz.pdf', format='pdf')
+    fig1.savefig('experimental_plots/supplementary/increasing_orbits_heatratevstime.pdf', format='pdf')
+    fig2.savefig('experimental_plots/supplementary/increasing_orbits_statespacecomparison.pdf', format='pdf')
+    fig3.savefig('experimental_plots/supplementary/increasing_orbits_statespaceprediction.pdf', format='pdf')
+    fig4.savefig('experimental_plots/supplementary/increasing_orbits_manifolds1.pdf', format='pdf')
+    fig5.savefig('experimental_plots/supplementary/increasing_orbits_manifolds2.pdf', format='pdf')
+    fig6.savefig('experimental_plots/supplementary/increasing_orbits_metrics.pdf', format='pdf')
