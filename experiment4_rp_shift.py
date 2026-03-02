@@ -5,7 +5,6 @@ plt.style.use(r'matplotlib_stylesheet\journal_nolatex.mplstyle')
 import utils
 from utils import NeuralNetwork
 from utils import train_model
-from utils import add_percent_noise
 import psa
 
 import torch 
@@ -20,19 +19,6 @@ def read_data(data_directory):
     X = np.concatenate((np.array(df['rho']).reshape(-1,1),np.array(df['T']).reshape(-1,1),np.array(df['S']).reshape(-1,1)),axis=1)
     Y = np.array(df['heat_rate']).reshape(-1,1)
     return df, t, X, Y
-
-def read_noisy_data(data_directory,noiselevel):
-    df = pd.read_csv(data_directory).drop_duplicates(subset=['time'], keep='first')
-    t = np.array(df['time'])
-
-    noisy_rho = add_percent_noise(np.array(df['rho']).reshape(-1,1),percent_noise=noiselevel)
-    noisy_T = add_percent_noise(np.array(df['T']).reshape(-1,1),percent_noise=noiselevel)
-    noisy_S = add_percent_noise(np.array(df['S']).reshape(-1,1),percent_noise=noiselevel)
-
-    X = np.concatenate((noisy_rho,noisy_T,noisy_S),axis=1)
-    Y = np.array(df['heat_rate']).reshape(-1,1)
-    return df, t, X, Y
-
 
 if __name__ == '__main__':
     mission1_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
@@ -53,17 +39,16 @@ if __name__ == '__main__':
                   r'$r_p=96$ km', 
                   r'$r_p=97$ km'] # Model training performed on descending shifts
 
-    # Read data and add noise from CSV
-    noiselevel = 0.1
-    df1, t1, X1, Y1 = read_noisy_data(mission1_data_directory,noiselevel=0)
-    df2, t2, X2, Y2 = read_noisy_data(mission2_data_directory,noiselevel)
-    df3, t3, X3, Y3 = read_noisy_data(mission3_data_directory,noiselevel)
-    df4, t4, X4, Y4 = read_noisy_data(mission4_data_directory,noiselevel)
-    df5, t5, X5, Y5 = read_noisy_data(mission5_data_directory,noiselevel)
-    df6, t6, X6, Y6 = read_noisy_data(mission6_data_directory,noiselevel)
-    df7, t7, X7, Y7 = read_noisy_data(mission7_data_directory,noiselevel)
-    df8, t8, X8, Y8 = read_noisy_data(mission8_data_directory,noiselevel)
-    df9, t9, X9, Y9 = read_noisy_data(mission9_data_directory,noiselevel)
+    # Read data from CSV
+    df1, t1, X1, Y1 = read_data(mission1_data_directory)
+    df2, t2, X2, Y2 = read_data(mission2_data_directory)
+    df3, t3, X3, Y3 = read_data(mission3_data_directory)
+    df4, t4, X4, Y4 = read_data(mission4_data_directory)
+    df5, t5, X5, Y5 = read_data(mission5_data_directory)
+    df6, t6, X6, Y6 = read_data(mission6_data_directory)
+    df7, t7, X7, Y7 = read_data(mission7_data_directory)
+    df8, t8, X8, Y8 = read_data(mission8_data_directory)
+    df9, t9, X9, Y9 = read_data(mission9_data_directory)
 
     inputdomain_list = [X9, X8, X7, X6, X5, X4, X3, X2]
     outputdomain_list = [Y9, Y8, Y7, Y6, Y5, Y4, Y3, Y2]
@@ -107,7 +92,7 @@ if __name__ == '__main__':
         window_length = 5 # 50
         k = 5 # subspace rank
         Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1,X_fromlist,Y1,Y_fromlist,t1,t_fromlist,
-                                                                                                                 window_length,k,interptype='time')
+                                                                                                                 window_length,k,interptype='removal')
 
         #=======================================================================================#
         # Data Preprocessing
@@ -262,28 +247,30 @@ if __name__ == '__main__':
         """ Manifolds """
         if i < 4:
             scolors = Hx_proj[2,:] #np.linspace(0,Hx_proj.shape[1],num=Hx_proj.shape[1])
-            tcolors = Za[:,2] #np.linspace(0,Za.shape[0],num=Za.shape[0])
+            tcolors = Hz_proj[2,:] #np.linspace(0,Hz_proj.shape[1],num=Hz_proj.shape[1])
 
             ax4[i,0].scatter(Hx_proj[0,:],Hx_proj[1,:],Hx_proj[2,:],s=4,marker='.',c=scolors,cmap='viridis',label='$H_{X,\mathrm{proj}}$',rasterized=True,depthshade=False)
-            ax4[i,0].scatter(Za[:,0],Za[:,1],Za[:,2],s=4,marker='.',c=tcolors,cmap='plasma',label='$Z_a$',rasterized=True,depthshade=False)
+            ax4[i,0].scatter(Hz_proj[0,:],Hz_proj[1,:],Hz_proj[2,:],s=4,marker='.',c=tcolors,cmap='plasma',label='$H_{Z,\mathrm{proj}}$',rasterized=True,depthshade=False)
             ax4[i,0].legend(title=shift_list[i],loc='upper left',framealpha=0.5)
             ax4[i,0].tick_params(pad=-5)
 
             scolors = Xa[:,2] #np.linspace(0,Xa.shape[0],num=Xa.shape[0])
+            tcolors = Za[:,2] #np.linspace(0,Za.shape[0],num=Za.shape[0])
             ax4[i,1].scatter(Xa[:,0],Xa[:,1],Xa[:,2],s=4,marker='.',c=scolors,cmap='viridis',label='$X_a$',rasterized=True,depthshade=False)
             ax4[i,1].scatter(Za[:,0],Za[:,1],Za[:,2],s=4,marker='.',c=tcolors,cmap='plasma',label='$Z_a$',rasterized=True,depthshade=False)
             ax4[i,1].legend(title=shift_list[i],loc='upper left',framealpha=0.5)
             ax4[i,1].tick_params(pad=-5)
         elif i >= 4:
             scolors = Hx_proj[2,:] #np.linspace(0,Hx_proj.shape[1],num=Hx_proj.shape[1])
-            tcolors = Za[:,2] #np.linspace(0,Za.shape[0],num=Za.shape[0])
+            tcolors = Hz_proj[2,:] #np.linspace(0,Hz_proj.shape[1],num=Hz_proj.shape[1])
 
             ax5[i-4,0].scatter(Hx_proj[0,:],Hx_proj[1,:],Hx_proj[2,:],s=4,marker='.',c=scolors,cmap='viridis',label='$H_{X,\mathrm{proj}}$',rasterized=True,depthshade=False)
-            ax5[i-4,0].scatter(Za[:,0],Za[:,1],Za[:,2],s=4,marker='.',c=tcolors,cmap='plasma',label='$Z_a$',rasterized=True,depthshade=False)
+            ax5[i-4,0].scatter(Hz_proj[0,:],Hz_proj[1,:],Hz_proj[2,:],s=4,marker='.',c=tcolors,cmap='plasma',label='$H_{Z,\mathrm{proj}}$',rasterized=True,depthshade=False)
             ax5[i-4,0].legend(title=shift_list[i],loc='upper left',framealpha=0.5)
             ax5[i-4,0].tick_params(pad=-5)
 
             scolors = Xa[:,2] #np.linspace(0,Xa.shape[0],num=Xa.shape[0])
+            tcolors = Za[:,2] #np.linspace(0,Za.shape[0],num=Za.shape[0])
             ax5[i-4,1].scatter(Xa[:,0],Xa[:,1],Xa[:,2],s=4,marker='.',c=scolors,cmap='viridis',label='$X_a$',rasterized=True,depthshade=False)
             ax5[i-4,1].scatter(Za[:,0],Za[:,1],Za[:,2],s=4,marker='.',c=tcolors,cmap='plasma',label='$Z_a$',rasterized=True,depthshade=False)
             ax5[i-4,1].legend(title=shift_list[i],loc='upper left',framealpha=0.5)
@@ -316,10 +303,10 @@ if __name__ == '__main__':
     ax6[2].legend(framealpha=0.5,fontsize=6.25)
 
 
-    fig0.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_dataviz.pdf', format='pdf')
-    fig1.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_heatratevstime.pdf', format='pdf')
-    fig2.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_statespacecomparison.pdf', format='pdf')
-    fig3.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_statespaceprediction.pdf', format='pdf')
-    fig4.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_manifolds1.pdf', format='pdf')
-    fig5.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_manifolds2.pdf', format='pdf')
-    fig6.savefig('experimental_plots/noisy_data/p10noisy_increasing_rp_shifts_metrics.pdf', format='pdf')
+    fig0.savefig('experimental_plots/supplementary/increasing_rp_shifts_dataviz.pdf', format='pdf')
+    fig1.savefig('experimental_plots/supplementary/increasing_rp_shifts_heatratevstime.pdf', format='pdf')
+    fig2.savefig('experimental_plots/supplementary/increasing_rp_shifts_statespacecomparison.pdf', format='pdf')
+    fig3.savefig('experimental_plots/supplementary/increasing_rp_shifts_statespaceprediction.pdf', format='pdf')
+    fig4.savefig('experimental_plots/supplementary/increasing_rp_shifts_manifolds1.pdf', format='pdf')
+    fig5.savefig('experimental_plots/supplementary/increasing_rp_shifts_manifolds2.pdf', format='pdf')
+    fig6.savefig('experimental_plots/supplementary/increasing_rp_shifts_metrics.pdf', format='pdf')

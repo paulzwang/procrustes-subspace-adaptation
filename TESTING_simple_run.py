@@ -7,6 +7,7 @@ from utils import NeuralNetwork
 from utils import train_model
 from utils import add_percent_noise
 import psa
+import TESTING_psa
 
 import torch 
 from sklearn.metrics import root_mean_squared_error
@@ -36,11 +37,12 @@ def read_noisy_data(data_directory,noiselevel):
 
 if __name__ == '__main__':
     mission1_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
-    # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
-    mission2_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11498_rp=100.0\Results_ctrl=0_ra=11498_rp=100.0_hl=0.150_90.0deg.csv'
+    mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=90.0\Results_ctrl=0_ra=12000_rp=90.0_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12009_rp=90.8\Results_ctrl=0_ra=12009_rp=90.8_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11498_rp=100.0\Results_ctrl=0_ra=11498_rp=100.0_hl=0.150_90.0deg.csv'
 
     # Read data and add noise from CSV
-    noiselevel = 0.05
+    noiselevel = 0
     df1, t1, X1, Y1 = read_noisy_data(mission1_data_directory,noiselevel=0)
     df2, t2, X2, Y2 = read_noisy_data(mission2_data_directory,noiselevel)
 
@@ -117,14 +119,14 @@ if __name__ == '__main__':
     """ Interpolated Manifolds """
     scolors = Hx_proj[2,:] #np.linspace(0,Hx_proj.shape[1],num=Hx_proj.shape[1])
     tcolors = Hz_proj[2,:] #np.linspace(0,Hz_proj.shape[1],num=Hz_proj.shape[1])
-    ax0[0,0].scatter(Hx_proj[0,:],Hx_proj[1,:],Hx_proj[2,:],s=4,marker='.',c=scolors,cmap='viridis',label='Interpolated $H_{X,\mathrm{proj}}$',rasterized=True,depthshade=False)
-    ax0[0,0].scatter(Hz_proj[0,:],Hz_proj[1,:],Hz_proj[2,:],s=4,marker='.',c=tcolors,cmap='plasma',label='Interpolated $H_{Z,\mathrm{proj}}$',rasterized=True,depthshade=False)
+    ax0[0,0].scatter(Hx_proj[0,:],Hx_proj[1,:],Hx_proj[2,:],s=4,marker='.',c=scolors,cmap='viridis',label='$H_{X,\mathrm{proj}}$',rasterized=True,depthshade=False)
+    ax0[0,0].scatter(Hz_proj[0,:],Hz_proj[1,:],Hz_proj[2,:],s=4,marker='.',c=tcolors,cmap='plasma',label='$H_{Z,\mathrm{proj}}$ with data removal',rasterized=True,depthshade=False)
     ax0[0,0].legend(loc='upper left',framealpha=0.5,fontsize=legend_fontsize)
     ax0[0,0].tick_params(pad=-5)
 
     scolors = Hx_proj_aligned[2,:]
-    ax0[0,1].scatter(Hx_proj_aligned[0,:],Hx_proj_aligned[1,:],Hx_proj_aligned[2,:],s=4,marker='.',c=scolors,cmap='viridis',label='Interpolated aligned $H_{X,\mathrm{proj}}$',rasterized=True,depthshade=False)
-    ax0[0,1].scatter(Hz_proj[0,:],Hz_proj[1,:],Hz_proj[2,:],s=4,marker='.',c=tcolors,cmap='plasma',label='Interpolated $H_{Z,\mathrm{proj}}$',rasterized=True,depthshade=False)
+    ax0[0,1].scatter(Hx_proj_aligned[0,:],Hx_proj_aligned[1,:],Hx_proj_aligned[2,:],s=4,marker='.',c=scolors,cmap='viridis',label='Aligned $H_{X,\mathrm{proj}}$',rasterized=True,depthshade=False)
+    ax0[0,1].scatter(Hz_proj[0,:],Hz_proj[1,:],Hz_proj[2,:],s=4,marker='.',c=tcolors,cmap='plasma',label='$H_{Z,\mathrm{proj}}$ with data removal',rasterized=True,depthshade=False)
     ax0[0,1].legend(loc='upper left',framealpha=0.5,fontsize=legend_fontsize)
     ax0[0,1].tick_params(pad=-5)
 
@@ -140,7 +142,7 @@ if __name__ == '__main__':
     ax0[1,1].legend(loc='upper left',framealpha=0.5,fontsize=legend_fontsize)
     ax0[1,1].tick_params(pad=-5)
 
-    fig1, ax1 = plt.subplots(1,2,width_ratios=[0.4,1],layout='constrained')
+    fig1, ax1 = plt.subplots(1,2,width_ratios=[0.4,1],figsize=(6,3),layout='constrained')
     # Target Domain
     ax1[0].scatter(Ytpred_og,Y2,s=2,label=f"RMSE: {round(rmse_og,4)}",color='red', rasterized=True)
     ax1[0].scatter(Ytpred_da,Y2,s=2,label=f"RMSE: {round(rmse_da,4)}",color='darkorchid', rasterized=True)
@@ -161,7 +163,7 @@ if __name__ == '__main__':
     ax1[1].plot(Ytpred_og,label="No adaptation",color='red')
     ax1[1].plot(Ytpred_da,label="Domain adapted",color='darkorchid')
     ax1[1].set_xlabel('Time Step')
-    ax1[1].set_ylabel('Heat Rate (W/cm$^2$)')
+    ax1[1].set_ylabel('HeatRate (W/cm$^2$)')
     ax1[1].legend(fontsize=6.25,framealpha=0.5)
-    
+    plt.show()
     fig0.savefig('noisy_manifold_interpolation.pdf',format='pdf')

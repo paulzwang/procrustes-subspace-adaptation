@@ -55,7 +55,7 @@ if __name__ == '__main__':
                   r'$e=0.98400$ km'] # Model training performed on ascending shifts
 
     # Read data and add noise from CSV
-    noiselevel = 0.01
+    noiselevel = 0.05
     df1, t1, X1, Y1 = read_noisy_data(mission1_data_directory,noiselevel=0)
     df2, t2, X2, Y2 = read_noisy_data(mission2_data_directory,noiselevel)
     df3, t3, X3, Y3 = read_noisy_data(mission3_data_directory,noiselevel)
@@ -317,10 +317,10 @@ if __name__ == '__main__':
     ax6[2].legend(framealpha=0.5,fontsize=6.25)
 
 
-    fig0.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_dataviz.pdf', format='pdf')
-    fig1.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_heatratevstime.pdf', format='pdf')
-    fig2.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_statespacecomparison.pdf', format='pdf')
-    fig3.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_statespaceprediction.pdf', format='pdf')
-    fig4.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_manifolds1.pdf', format='pdf')
-    fig5.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_manifolds2.pdf', format='pdf')
-    fig6.savefig('experimental_plots/noisy_data/noisy_fixed_a_increasing_e_shifts_metrics.pdf', format='pdf')
+    fig0.savefig('experimental_plots/noisy_data/p5noisy_fixed_a_increasing_e_shifts_dataviz.pdf', format='pdf')
+    fig1.savefig('experimental_plots/noisy_data/p5noisy_fixed_a_increasing_e_shifts_heatratevstime.pdf', format='pdf')
+    fig2.savefig('experimental_plots/noisy_data/p5noisy_fixed_a_increasing_e_shifts_statespacecomparison.pdf', format='pdf')
+    fig3.savefig('experimental_plots/noisy_data/p5noisy_fixed_a_increasing_e_shifts_statespaceprediction.pdf', format='pdf')
+    fig4.savefig('experimental_plots/noisy_data/p5noisy_fixed_a_increasing_e_shifts_manifolds1.pdf', format='pdf')
+    fig5.savefig('experimental_plots/noisy_data/p5noisy_fixed_a_increasing_e_shifts_manifolds2.pdf', format='pdf')
+    fig6.savefig('experimental_plots/noisy_data/p5noisy_fixed_a_increasing_e_shifts_metrics.pdf', format='pdf')
