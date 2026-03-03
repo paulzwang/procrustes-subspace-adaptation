@@ -20,48 +20,68 @@ def interpolate_inputs(X,Z,ts,tt,interptype='time'):
 
         if visualization == True:
             """ Visualizing interpolation """
-            fig0, ax0 = plt.subplots(3,3,figsize=(5,3),layout='constrained')
-            ax0[0,0].plot(big_time,Z_interp[:,0],label=r'Interpolated $\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[0,0].plot(tt,Z[:,0],label=r'$\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[0,0].set_ylabel('Atmospheric\nDensity (kg/m$^3$)',fontsize=9)
+            fig0, ax0 = plt.subplots(1,3,figsize=(5,1.5),layout='constrained')
+            ax0[0].plot(big_time,X_interp[:,0],label=r'Interpolated $\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            ax0[0].plot(ts,X[:,0],label=r'$\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            ax0[0].set_xlabel('Time (s)',fontsize=9)
+            ax0[0].set_ylabel('Atmospheric\nDensity (kg/m$^3$)',fontsize=9)
+            ax0[0].legend(framealpha=0.5,fontsize=4)
 
-            ax0[0,1].plot(big_time,Z_interp[:,0],label=r'Interpolated $\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[0,1].plot(tt,Z[:,0],label=r'$\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[0,1].set_xlim((46000,50000))
+            ax0[1].plot(big_time,X_interp[:,1],label=r'Interpolated $T$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            ax0[1].plot(ts,X[:,1],label=r'$T$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            ax0[1].set_xlabel('Time (s)',fontsize=9)
+            ax0[1].set_ylabel('Freestream\nTemperature (K)',fontsize=9)
+            ax0[1].legend(framealpha=0.5,fontsize=4)
 
-            ax0[0,2].plot(big_time,Z_interp[:,0],label=r'Interpolated $\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[0,2].plot(tt,Z[:,0],label=r'$\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            ax0[2].plot(big_time,X_interp[:,2],label=r'Interpolated $S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            ax0[2].plot(ts,X[:,2],label=r'$S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            ax0[2].set_xlabel('Time (s)',fontsize=9)
+            ax0[2].set_ylabel('Molecular\nSpeed Ratio',fontsize=9)
+            ax0[2].legend(framealpha=0.5,fontsize=4)
             
-            """"""
-            ax0[1,0].plot(big_time,Z_interp[:,1],label=r'Interpolated $T$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[1,0].plot(tt,Z[:,1],label=r'$T$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[1,0].set_ylabel('Freestream\nTemperature (K)',fontsize=9)
+            # """ Visualizing interpolation """
+            # fig0, ax0 = plt.subplots(3,3,figsize=(5,3),layout='constrained')
+            # ax0[0,0].plot(big_time,Z_interp[:,0],label=r'Interpolated $\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[0,0].plot(tt,Z[:,0],label=r'$\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[0,0].set_ylabel('Atmospheric\nDensity (kg/m$^3$)',fontsize=9)
 
-            ax0[1,1].plot(big_time,Z_interp[:,1],label=r'Interpolated $S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[1,1].plot(tt,Z[:,1],label=r'$S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[1,1].set_ylim((-10000,10000))
+            # ax0[0,1].plot(big_time,Z_interp[:,0],label=r'Interpolated $\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[0,1].plot(tt,Z[:,0],label=r'$\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[0,1].set_xlim((46000,50000))
 
-            ax0[1,2].plot(big_time,Z_interp[:,1],label=r'Interpolated $S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[1,2].plot(tt,Z[:,1],label=r'$S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[1,2].set_xlim((46000,50000))
-            ax0[1,2].set_ylim((100,225))
-            """"""
-            ax0[2,0].plot(big_time,Z_interp[:,2],label='Interpolated data',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[2,0].plot(tt,Z[:,2],label='Original data',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[2,0].set_xlabel('Time (s)',fontsize=9)
-            ax0[2,0].set_ylabel('Molecular\nSpeed Ratio',fontsize=9)
-            ax0[2,0].legend(framealpha=0.5,fontsize=6.25)
+            # ax0[0,2].plot(big_time,Z_interp[:,0],label=r'Interpolated $\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[0,2].plot(tt,Z[:,0],label=r'$\rho$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            
+            # """"""
+            # ax0[1,0].plot(big_time,Z_interp[:,1],label=r'Interpolated $T$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[1,0].plot(tt,Z[:,1],label=r'$T$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[1,0].set_ylabel('Freestream\nTemperature (K)',fontsize=9)
 
-            ax0[2,1].plot(big_time,Z_interp[:,2],label=r'Interpolated $S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[2,1].plot(tt,Z[:,2],label=r'$S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[2,1].set_xlabel('Time (s)',fontsize=9)
-            ax0[2,1].set_ylim((-10000,10000))
+            # ax0[1,1].plot(big_time,Z_interp[:,1],label=r'Interpolated $S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[1,1].plot(tt,Z[:,1],label=r'$S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[1,1].set_ylim((-10000,10000))
 
-            ax0[2,2].plot(big_time,Z_interp[:,2],label=r'Interpolated $S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[2,2].plot(tt,Z[:,2],label=r'$S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
-            ax0[2,2].set_xlabel('Time (s)',fontsize=9)
-            ax0[2,2].set_xlim((46000,50000))
-            ax0[2,2].set_ylim((0,25))
+            # ax0[1,2].plot(big_time,Z_interp[:,1],label=r'Interpolated $S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[1,2].plot(tt,Z[:,1],label=r'$S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[1,2].set_xlim((46000,50000))
+            # ax0[1,2].set_ylim((100,225))
+            # """"""
+            # ax0[2,0].plot(big_time,Z_interp[:,2],label='Interpolated data',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[2,0].plot(tt,Z[:,2],label='Original data',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[2,0].set_xlabel('Time (s)',fontsize=9)
+            # ax0[2,0].set_ylabel('Molecular\nSpeed Ratio',fontsize=9)
+            # ax0[2,0].legend(framealpha=0.5,fontsize=6.25)
+
+            # ax0[2,1].plot(big_time,Z_interp[:,2],label=r'Interpolated $S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[2,1].plot(tt,Z[:,2],label=r'$S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[2,1].set_xlabel('Time (s)',fontsize=9)
+            # ax0[2,1].set_ylim((-10000,10000))
+
+            # ax0[2,2].plot(big_time,Z_interp[:,2],label=r'Interpolated $S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[2,2].plot(tt,Z[:,2],label=r'$S$',rasterized=True,marker='o',markerfacecolor='none',markersize=0.25,linestyle='-')
+            # ax0[2,2].set_xlabel('Time (s)',fontsize=9)
+            # ax0[2,2].set_xlim((46000,50000))
+            # ax0[2,2].set_ylim((0,25))
 
             fig1, ax1 = plt.subplots(1,3,figsize=(6,2),layout='constrained')
             ax1[0].hist(X[:,0],density=True,histtype='step',bins=20,label=r'$\rho$')
