@@ -45,17 +45,17 @@ if __name__ == '__main__':
     mission8_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=10721_rp=100.1\Results_ctrl=0_ra=10721_rp=100.1_hl=0.150_90.0deg.csv'
     mission9_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=10578_rp=100.1\Results_ctrl=0_ra=10578_rp=100.1_hl=0.150_90.0deg.csv'
 
-    shift_list = [r'$e=0.98125$ km', 
-                  r'$e=0.98150$ km', 
-                  r'$e=0.98175$ km', 
-                  r'$e=0.98200$ km', 
-                  r'$e=0.98225$ km', 
-                  r'$e=0.98250$ km', 
-                  r'$e=0.98275$ km', 
-                  r'$e=0.98300$ km'] # Model training performed on descending shifts
+    shift_list = [r'$e=0.98125$', 
+                  r'$e=0.98150$', 
+                  r'$e=0.98175$', 
+                  r'$e=0.98200$', 
+                  r'$e=0.98225$', 
+                  r'$e=0.98250$', 
+                  r'$e=0.98275$', 
+                  r'$e=0.98300$'] # Model training performed on descending shifts
 
     # Read data and add noise from CSV
-    noiselevel = 0.01
+    noiselevel = 0.05
     df1, t1, X1, Y1 = read_noisy_data(mission1_data_directory,noiselevel=0)
     df2, t2, X2, Y2 = read_noisy_data(mission2_data_directory,noiselevel)
     df3, t3, X3, Y3 = read_noisy_data(mission3_data_directory,noiselevel)
@@ -317,10 +317,10 @@ if __name__ == '__main__':
     ax6[2].legend(framealpha=0.5,fontsize=6.25)
 
 
-    fig0.savefig('experimental_plots/noisy_data/p1noisy_fixed_p_decreasing_e_shifts_dataviz.pdf', format='pdf')
-    fig1.savefig('experimental_plots/noisy_data/p1noisy_fixed_p_decreasing_e_shifts_heatratevstime.pdf', format='pdf')
-    fig2.savefig('experimental_plots/noisy_data/p1noisy_fixed_p_decreasing_e_shifts_statespacecomparison.pdf', format='pdf')
-    fig3.savefig('experimental_plots/noisy_data/p1noisy_fixed_p_decreasing_e_shifts_statespaceprediction.pdf', format='pdf')
-    fig4.savefig('experimental_plots/noisy_data/p1noisy_fixed_p_decreasing_e_shifts_manifolds1.pdf', format='pdf')
-    fig5.savefig('experimental_plots/noisy_data/p1noisy_fixed_p_decreasing_e_shifts_manifolds2.pdf', format='pdf')
-    fig6.savefig('experimental_plots/noisy_data/p1noisy_fixed_p_decreasing_e_shifts_metrics.pdf', format='pdf')
+    fig0.savefig('experimental_plots/noisy_data/p5noisy_fixed_p_decreasing_e_shifts_dataviz.pdf', format='pdf')
+    fig1.savefig('experimental_plots/noisy_data/p5noisy_fixed_p_decreasing_e_shifts_heatratevstime.pdf', format='pdf')
+    fig2.savefig('experimental_plots/noisy_data/p5noisy_fixed_p_decreasing_e_shifts_statespacecomparison.pdf', format='pdf')
+    fig3.savefig('experimental_plots/noisy_data/p5noisy_fixed_p_decreasing_e_shifts_statespaceprediction.pdf', format='pdf')
+    fig4.savefig('experimental_plots/noisy_data/p5noisy_fixed_p_decreasing_e_shifts_manifolds1.pdf', format='pdf')
+    fig5.savefig('experimental_plots/noisy_data/p5noisy_fixed_p_decreasing_e_shifts_manifolds2.pdf', format='pdf')
+    fig6.savefig('experimental_plots/noisy_data/p5noisy_fixed_p_decreasing_e_shifts_metrics.pdf', format='pdf')

@@ -31,14 +31,14 @@ if __name__ == '__main__':
     mission8_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=10721_rp=100.1\Results_ctrl=0_ra=10721_rp=100.1_hl=0.150_90.0deg.csv'
     mission9_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=10578_rp=100.1\Results_ctrl=0_ra=10578_rp=100.1_hl=0.150_90.0deg.csv'
 
-    shift_list = [r'$e=0.98125$ km', 
-                  r'$e=0.98150$ km', 
-                  r'$e=0.98175$ km', 
-                  r'$e=0.98200$ km', 
-                  r'$e=0.98225$ km', 
-                  r'$e=0.98250$ km', 
-                  r'$e=0.98275$ km', 
-                  r'$e=0.98300$ km'] # Model training performed on descending shifts
+    shift_list = [r'$e=0.98125$', 
+                  r'$e=0.98150$', 
+                  r'$e=0.98175$', 
+                  r'$e=0.98200$', 
+                  r'$e=0.98225$', 
+                  r'$e=0.98250$', 
+                  r'$e=0.98275$', 
+                  r'$e=0.98300$'] # Model training performed on descending shifts
 
     # Read data from CSV
     df1, t1, X1, Y1 = read_data(mission1_data_directory)
