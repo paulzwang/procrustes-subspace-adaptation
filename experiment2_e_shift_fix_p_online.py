@@ -216,6 +216,7 @@ if __name__ == '__main__':
         ax0[i,0].plot(list_percent_seen,np.array(list_aligned_d)/np.array(list_numpoints),marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='navy',label=r'Post-adaptation $d/n$')
         ax0[i,1].plot(list_percent_seen,list_rmse_og,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='red',label='No adaptation')
         ax0[i,1].plot(list_percent_seen,list_rmse_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='darkorchid',label='Domain adapted')
+        ax0[i,1].set_title(f'Mission {len(inputdomain_list) - i}: {shift_list[i]}')
         ax0[i,2].plot(list_percent_seen,list_r2_og,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='red',label='No adaptation')
         ax0[i,2].plot(list_percent_seen,list_r2_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='darkorchid',label='Domain adapted')
         if i == len(inputdomain_list)-1:
