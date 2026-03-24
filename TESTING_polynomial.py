@@ -49,7 +49,7 @@ def calculate_heat_rate(X):
     #     (S**2.0 + (gamma)/(gamma - 1.0) - (gamma + 1.0) / (2.0 * (gamma - 1))) * (
     #         np.exp(-(S * np.sin(aoa)) ** 2.0) + (np.pi ** 0.5) * (S * np.sin(aoa)) * 
     #         (1 + erf(S * np.sin(aoa)))) - 0.5 * np.exp(-(S * np.sin(aoa)) ** 2.0)) * 1e-4  # W/cm^2
-    heat_rate = (taf*(rho*10**6)**2*R*T) * ((R*T/(2.0*np.pi))**0.5) * (
+    heat_rate = (taf*rho*R*T) * ((R*T/(2.0*np.pi))**0.5) * (
         (S**2.0 + (gamma)/(gamma - 1.0) - (gamma + 1.0) / (2.0 * (gamma - 1))) * (
             np.exp(-(S * np.sin(aoa)) ** 2.0) + (np.pi ** 0.5) * (S * np.sin(aoa)) * 
             (1 + erf(S * np.sin(aoa)))) - 0.5 * np.exp(-(S * np.sin(aoa)) ** 2.0)) * 1e-4 
@@ -58,8 +58,8 @@ def calculate_heat_rate(X):
 
 if __name__ == '__main__':
     mission1_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=100.0\Results_ctrl=0_ra=12000_rp=100.0_hl=0.150_90.0deg.csv'
-    mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
-    # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=99.0\Results_ctrl=0_ra=12000_rp=99.0_hl=0.150_90.0deg.csv'
+    # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
+    mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=99.0\Results_ctrl=0_ra=12000_rp=99.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=90.0\Results_ctrl=0_ra=12000_rp=90.0_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\fixed_semimajor_eccentricity_shift\4orbit_ra=12009_rp=90.8\Results_ctrl=0_ra=12009_rp=90.8_hl=0.150_90.0deg.csv'
     # mission2_data_directory = r'data\fixed_semilatus_eccentricity_shift\4orbit_ra=11498_rp=100.0\Results_ctrl=0_ra=11498_rp=100.0_hl=0.150_90.0deg.csv'
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     window_length = 5 # 50
     k = 5 # subspace rank
     Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1,X2,Y1,Y2,t1,t2,
-                                                                                                                window_length,k,interptype='time')
+                                                                                                                window_length,k,interptype='removal')
 
     #=======================================================================================#
     # Data Preprocessing
