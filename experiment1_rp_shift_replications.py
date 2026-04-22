@@ -13,7 +13,7 @@ from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
 import scipy.linalg as linalg
 
-num_replications = 50
+num_replications = 100
 
 def read_data(data_directory):
     df = pd.read_csv(data_directory).drop_duplicates(subset=['time'], keep='first')
@@ -235,4 +235,4 @@ if __name__ == '__main__':
     ax6[2].set_ylabel(r'R$^2$')
     ax6[2].legend(framealpha=0.5,fontsize=6.25)
 
-    fig6.savefig('journal_plots/50replications_rp_shift_metrics.pdf', format='pdf')
+    fig6.savefig('journal_plots/100replications_rp_shift_metrics.pdf', format='pdf')
