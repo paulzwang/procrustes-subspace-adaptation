@@ -214,8 +214,7 @@ if __name__ == '__main__':
         list_unaligned_d.append(linalg.norm(Hx_proj - Hz_proj))
         list_aligned_d.append(linalg.norm(Hx_proj_aligned - Hz_proj))
 
-        # list_numpoints.append(X_fromlist.shape[0])
-        list_numpoints.append(Hx_proj.shape[1])
+        list_numpoints.append(X_fromlist.shape[0])
 
 
     """ Training Metrics """
