@@ -75,11 +75,10 @@ if __name__ == '__main__':
     #=======================================================================================#
     linecolor_list = np.linspace(0.8,0.1,len(inputdomain_list)) # Create an array of values to customize line color in RGB
     fig0, ax0 = plt.subplots(4,1,layout='constrained') # time series visualization
-    fig1, ax1 = plt.subplots(len(inputdomain_list),2,width_ratios=[0.4,1],figsize=(6,8),layout='constrained') # actual vs predicted and heat rate vs. time
+    fig1, ax1 = plt.subplots(4,4,layout='constrained') # actual vs predicted and heat rate vs. time
     plt.subplots_adjust(wspace=0.1)
     fig2, ax2 = plt.subplots(1,3,figsize=(7,2.75),layout='constrained') # state space visualization
-    fig3, ax3 = plt.subplots(len(inputdomain_list),3,width_ratios=[1,1,1],layout='constrained') # state space prediction
-    fig5, ax5 = plt.subplots(4,2,subplot_kw=dict(projection='3d'),figsize=(3.5,5.5),layout='constrained') # manifolds part 2
+    fig5, ax5 = plt.subplots(4,2,subplot_kw=dict(projection='3d'),figsize=(3.25,5.5),layout='constrained') # manifolds part 2
     fig6, ax6 = plt.subplots(1,3,figsize=(7,2),layout='constrained') # subspace distances vs mission number
 
     #=======================================================================================#
@@ -190,26 +189,6 @@ if __name__ == '__main__':
             ax0[3].set_ylabel('Heat Rate (W/cm$^2$)') 
             ax0[0].legend(framealpha=0.5,fontsize=4,ncol=3,loc='upper left')
 
-        """ Actual vs. Predicted and State Space Prediction """
-        # Plotting in target domain
-        ax1[i,0].scatter(Ytpred_og,Yt,s=0.25,label=f"RMSE: {round(rmse_og,4)}",color='red', rasterized=True)
-        ax1[i,0].scatter(Ytpred_da,Yt,s=0.25,label=f"RMSE: {round(rmse_da,4)}",color='darkorchid', rasterized=True)
-        # Plot line y=x, the ideal predicted vs. actual curve
-        lims = [
-            np.min([ax1[i,0].get_xlim(), ax1[i,0].get_ylim()]),  # min of both axes
-            np.max([ax1[i,0].get_xlim(), ax1[i,0].get_ylim()]),  # max1 of both axes
-        ]
-        ax1[i,0].plot(lims, lims, 'k-', alpha=0.75, zorder=0)
-        ax1[i,0].set_aspect('equal')
-        ax1[i,0].set_xlim(lims)
-        ax1[i,0].set_ylim(lims)
-        if i == len(inputdomain_list)-1:
-            ax1[i,0].set_xlabel('Predicted Output',fontsize=9)
-            ax1[i,0].set_ylabel('Actual Output',fontsize=9) 
-        ax1[i,0].legend(fontsize=4,framealpha=0.5)
-        ax1[i,1].plot(Yt,label=shift_list[i],color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])))
-        """  """
-
         
         """ State Space Comparison """
         # Plotting state space in target domain
@@ -228,28 +207,8 @@ if __name__ == '__main__':
             ax2[2].set_ylabel('Heat Rate (W/cm$^2$)') 
             ax2[0].legend(fontsize=4,ncol=3,loc='upper left',framealpha=0.5)
 
-        """ State Space Predictions """
-        # Plotting state space in target domain
-        ax3[i,0].scatter(rhot, Yt, s=0.25, label=shift_list[i], color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])), rasterized=True)
-        ax3[i,0].scatter(rhot, Ytpred_og, s=0.25, label="No adaptation", color='red', rasterized=True)
-        ax3[i,0].scatter(rhot, Ytpred_da, s=0.25, label="Domain adapted", color='darkorchid', rasterized=True)
-        if i == len(inputdomain_list)-1:
-            ax3[i,0].set_xlabel('Atmospheric\n Density (kg/m$^3$)',labelpad=5,fontsize=9)
-            ax3[i,0].set_ylabel('Heat Rate (W/cm$^2$)',fontsize=9) 
-        ax3[i,0].legend(fontsize=4,loc='upper left',framealpha=0.5)
-        ax3[i,1].scatter(Tt, Yt, s=0.25, label=shift_list[i], color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])), rasterized=True)
-        ax3[i,1].scatter(Tt, Ytpred_og, s=0.25, label="No adaptation", color='red', rasterized=True)
-        ax3[i,1].scatter(Tt, Ytpred_da, s=0.25, label="Domain adapted", color='darkorchid', rasterized=True)
-        if i == len(inputdomain_list)-1:
-            ax3[i,1].set_xlabel('Freestream\n Temperature (K)',labelpad=5,fontsize=9)
-        ax3[i,2].scatter(St, Yt, s=0.25, label=shift_list[i], color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])), rasterized=True)
-        ax3[i,2].scatter(St, Ytpred_og, s=0.25, label="No adaptation", color='red', rasterized=True)
-        ax3[i,2].scatter(St, Ytpred_da, s=0.25, label="Domain adapted", color='darkorchid', rasterized=True)
-        if i == len(inputdomain_list)-1:
-            ax3[i,2].set_xlabel('Molecular\n Speed Ratio',labelpad=5,fontsize=9)
-
-        """ Manifolds """
         if i >= 6:
+            """ Manifolds for Mission 1-4"""
             scolors = Hx_proj[2,:] #np.linspace(0,Hx_proj.shape[1],num=Hx_proj.shape[1])
             tcolors = Hz_proj[2,:] #np.linspace(0,Hz_proj.shape[1],num=Hz_proj.shape[1])
 
@@ -264,6 +223,44 @@ if __name__ == '__main__':
             ax5[i-6,1].scatter(Za[:,0],Za[:,1],Za[:,2],s=2,marker='.',c=tcolors,cmap='plasma',label='$Z_a$',rasterized=True,depthshade=False)
             ax5[i-6,1].legend(title=f'Mission {10-i},\naligned manifolds', title_fontsize=4, loc='upper left',framealpha=0.5,fontsize=4)
             ax5[i-6,1].tick_params(pad=-3)
+
+
+            """ Actual vs. Predicted, State Space Prediction for Mission 1-4"""
+            # Plotting in target domain
+            ax1[i-6,0].scatter(Ytpred_og,Yt,s=0.25,label=f"RMSE: {round(rmse_og,4)}",color='red', rasterized=True)
+            ax1[i-6,0].scatter(Ytpred_da,Yt,s=0.25,label=f"RMSE: {round(rmse_da,4)}",color='darkorchid', rasterized=True)
+            # Plot line y=x, the ideal predicted vs. actual curve
+            lims = [
+                np.min([ax1[i-6,0].get_xlim(), ax1[i-6,0].get_ylim()]),  # min of both axes
+                np.max([ax1[i-6,0].get_xlim(), ax1[i-6,0].get_ylim()]),  # max1 of both axes
+            ]
+            ax1[i-6,0].plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+            ax1[i-6,0].set_aspect('equal')
+            ax1[i-6,0].set_xlim(lims)
+            ax1[i-6,0].set_ylim(lims)
+            if i == len(inputdomain_list)-1:
+                ax1[i-6,0].set_xlabel(r'Predicted $\dot Q$',fontsize=9)
+                ax1[i-6,0].set_ylabel(r'Actual $\dot Q$',fontsize=9) 
+            ax1[i-6,0].legend(fontsize=4,loc='lower right',framealpha=0.5)
+            ax1[i-6,0].set_title(f'Mission {len(inputdomain_list) - i}: {shift_list[i]}',fontsize=9)
+            
+            ax1[i-6,1].scatter(rhot, Yt, s=0.25, label=f'Mission {10-i} ground truth', color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])), rasterized=True)
+            ax1[i-6,1].scatter(rhot, Ytpred_og, s=0.25, label="No adaptation", color='red', rasterized=True)
+            ax1[i-6,1].scatter(rhot, Ytpred_da, s=0.25, label="Domain adapted", color='darkorchid', rasterized=True)
+            if i == len(inputdomain_list)-1:
+                ax1[i-6,1].set_xlabel('Atmospheric\n Density (kg/m$^3$)',labelpad=5,fontsize=9)
+                ax1[i-6,1].set_ylabel('Heat Rate (W/cm$^2$)',fontsize=9) 
+            ax1[i-6,1].legend(fontsize=4,loc='upper left',framealpha=0.5)
+            ax1[i-6,2].scatter(Tt, Yt, s=0.25, label=f'Mission {10-i} ground truth', color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])), rasterized=True)
+            ax1[i-6,2].scatter(Tt, Ytpred_og, s=0.25, label="No adaptation", color='red', rasterized=True)
+            ax1[i-6,2].scatter(Tt, Ytpred_da, s=0.25, label="Domain adapted", color='darkorchid', rasterized=True)
+            if i == len(inputdomain_list)-1:
+                ax1[i-6,2].set_xlabel('Freestream\n Temperature (K)',labelpad=5,fontsize=9)
+            ax1[i-6,3].scatter(St, Yt, s=0.25, label=f'Mission {10-i} ground truth', color=(0, 0+float(linecolor_list[i]), 1-float(linecolor_list[i])), rasterized=True)
+            ax1[i-6,3].scatter(St, Ytpred_og, s=0.25, label="No adaptation", color='red', rasterized=True)
+            ax1[i-6,3].scatter(St, Ytpred_da, s=0.25, label="Domain adapted", color='darkorchid', rasterized=True)
+            if i == len(inputdomain_list)-1:
+                ax1[i-6,3].set_xlabel('Molecular\n Speed Ratio',labelpad=5,fontsize=9)
         
         """ Collect RMSE, R2, and subspace distances """
         list_rmse_og.append(rmse_og)
@@ -293,8 +290,7 @@ if __name__ == '__main__':
 
 
     fig0.savefig('journal_plots/increasing_rp_shifts_dataviz.pdf', format='pdf')
-    fig1.savefig('journal_plots/increasing_rp_shifts_heatratevstime.pdf', format='pdf')
+    fig1.savefig('journal_plots/increasing_rp_shifts_prediction_results.pdf', format='pdf')
     fig2.savefig('journal_plots/increasing_rp_shifts_statespacecomparison.pdf', format='pdf')
-    fig3.savefig('journal_plots/increasing_rp_shifts_statespaceprediction.pdf', format='pdf')
-    fig5.savefig('journal_plots/increasing_rp_shifts_manifolds2.pdf', format='pdf')
+    fig5.savefig('journal_plots/increasing_rp_shifts_manifolds.pdf', format='pdf')
     fig6.savefig('journal_plots/increasing_rp_shifts_metrics.pdf', format='pdf')
