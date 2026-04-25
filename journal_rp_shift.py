@@ -270,27 +270,8 @@ if __name__ == '__main__':
         list_unaligned_d.append(linalg.norm(Hx_proj - Hz_proj))
         list_aligned_d.append(linalg.norm(Hx_proj_aligned - Hz_proj))
 
-    """ Subspace Distances """
-    mission_numbers = list(np.linspace(len(inputdomain_list),1,len(inputdomain_list)))
-    ax6[0].plot(mission_numbers,list_unaligned_d,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='maroon',label=r'Pre-adaptation $d$')
-    ax6[0].plot(mission_numbers,list_aligned_d,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='navy',label=r'Post-adaptation $d$')
-    ax6[0].set_xlabel('Mission Number')
-    ax6[0].set_ylabel(r'Subspace Distance $d$')
-    ax6[0].legend(framealpha=0.5,fontsize=6.25)
-    ax6[1].plot(mission_numbers,list_rmse_og,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='red',label='No adaptation')
-    ax6[1].plot(mission_numbers,list_rmse_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='darkorchid',label='Domain adapted')
-    ax6[1].set_xlabel('Mission Number')
-    ax6[1].set_ylabel('RMSE')
-    ax6[1].legend(framealpha=0.5,fontsize=6.25)
-    ax6[2].plot(mission_numbers,list_r2_og,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='red',label='No adaptation')
-    ax6[2].plot(mission_numbers,list_r2_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='darkorchid',label='Domain adapted')
-    ax6[2].set_xlabel('Mission Number')
-    ax6[2].set_ylabel(r'R$^2$')
-    ax6[2].legend(framealpha=0.5,fontsize=6.25)
-
 
     fig0.savefig('journal_plots/increasing_rp_shifts_dataviz.pdf', format='pdf')
     fig1.savefig('journal_plots/increasing_rp_shifts_prediction_results.pdf', format='pdf')
     fig2.savefig('journal_plots/increasing_rp_shifts_statespacecomparison.pdf', format='pdf')
     fig5.savefig('journal_plots/increasing_rp_shifts_manifolds.pdf', format='pdf')
-    fig6.savefig('journal_plots/increasing_rp_shifts_metrics.pdf', format='pdf')
