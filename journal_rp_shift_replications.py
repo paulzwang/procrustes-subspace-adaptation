@@ -236,4 +236,17 @@ if __name__ == '__main__':
     ax6[2].set_ylabel(r'R$^2$')
     ax6[2].legend(framealpha=0.5,fontsize=6.25)
 
+    print(f"Mean RMSE values of baseline: {list_mean_rmse_og}")
+    print(f"3sigma on RMSE values of baseline: {list_std_rmse_og}")
+    print(f"Mean R2 values of baseline: {list_mean_r2_og}")
+    print(f"3sigma on R2 values of baseline: {list_std_r2_og}")
+
+    print(f"Mean RMSE values of adapted model: {list_mean_rmse_da}")
+    print(f"3sigma on RMSE values of adapted model: {list_std_rmse_da}")
+    print(f"Mean R2 values of adapted model: {list_mean_r2_da}")
+    print(f"3sigma on R2 values of adapted model: {list_std_r2_da}")
+
+    print(f"Unaligned d: {np.array(list_unaligned_d)/np.array(list_numpoints)}")
+    print(f"Aligned d: {np.array(list_aligned_d)/np.array(list_numpoints)}")
+
     fig6.savefig('journal_plots/100replications_rp_shift_metrics.pdf', format='pdf')

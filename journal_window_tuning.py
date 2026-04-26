@@ -68,9 +68,9 @@ if __name__ == '__main__':
     list_aligned_d = []
     list_numpoints = []
 
-    list_window_length = np.arange(1,50,1)
+    list_window_length = np.arange(1,51,1)
     for window_length in list_window_length:
-        k = 5 # subspace rank
+        k = window_length # subspace rank
         Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1,X2,Y1,Y2,t1,t2,
                                                                                                                     window_length,k,interptype='removal')
 
@@ -193,4 +193,11 @@ if __name__ == '__main__':
     ax6.set_ylabel('RMSE')
     # ax6.legend(framealpha=0.5,fontsize=6.25)
 
-    plt.show()
+    print(f"Mean RMSE values: {mean_rmse_og}")
+    print(f"3sigma on RMSE values: {std_rmse_da}")
+    print(f"Mean R2 values: {mean_r2_da}")
+    print(f"3sigma on R2 values: {std_r2_da}")
+    print(f"Unaligned d: {list_unaligned_d}")
+    print(f"Aligned d: {list_aligned_d}")
+
+    fig6.savefig('journal_plots/rmse_vs_window_length.pdf', format='pdf')
