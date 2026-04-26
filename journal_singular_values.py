@@ -105,7 +105,7 @@ if __name__ == '__main__':
         Hx1 = find_trajectory_matrix(X1,L=window_length)
         U1,S1,V1 = np.linalg.svd(Hx1)
         """ Plot singular values """
-        index = np.arange(0,len(S1),1)
+        index = np.arange(1,len(S1)+1,1)
         cumsum_normalized = np.cumsum(S1)/np.sum(S1)
         ax0[0,0].plot(index,S1,marker='o',markerfacecolor='none',markersize=2,zorder=len(list_window_length)-window_length,linestyle='-',rasterized=True,color=(0+float(linecolor_list0[idx]), 0, 1-float(linecolor_list0[idx])),label=f'$L={window_length}$')
         ax0[0,1].plot(index,cumsum_normalized,marker='o',markerfacecolor='none',markersize=2,zorder=len(list_window_length)-window_length,linestyle='-',rasterized=True,color=(0+float(linecolor_list0[idx]), 0, 1-float(linecolor_list0[idx-1])),label=f'$L={window_length}$')
@@ -124,11 +124,11 @@ if __name__ == '__main__':
 
     ax0[1,0].set_xlabel(r'$i$', fontsize=9)
     ax0[1,0].set_ylabel(r'Singular value $\sigma_i$', fontsize=9)
-    ax0[1,0].set_xlim(-1,10.5)
+    ax0[1,0].set_xlim(0,10.5)
     ax0[1,0].legend(framealpha=0.5,ncols=3,fontsize=4)
     ax0[1,1].set_xlabel(r'$r$', fontsize=9)
     ax0[1,1].set_ylabel(r'Cumulative sum $\sum_{i=1}^r \sigma_i$', fontsize=9)
-    ax0[1,1].set_xlim(-1,10.5)
+    ax0[1,1].set_xlim(0,10.5)
 
     """ Singular values for different missions """
     window_length=5
@@ -138,7 +138,7 @@ if __name__ == '__main__':
         U,S,V = np.linalg.svd(Hx)
 
         """ Plot singular values """
-        index = np.arange(0,len(S),1)
+        index = np.arange(1,len(S)+1,1)
         cumsum_normalized = np.cumsum(S)/np.sum(S)
         ax1[0].plot(index,S,marker='o',markerfacecolor='none',markersize=2,linestyle='-',rasterized=True,color=(0, 0+float(linecolor_list1[i]), 1-float(linecolor_list1[i])),label=shift_list[i])
         ax1[1].plot(index,cumsum_normalized,marker='o',markerfacecolor='none',markersize=2,linestyle='-',rasterized=True,color=(0, 0+float(linecolor_list1[i]), 1-float(linecolor_list1[i])),label=shift_list[i])
