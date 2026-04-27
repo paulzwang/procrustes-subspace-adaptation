@@ -90,7 +90,7 @@ if __name__ == '__main__':
     inputdomain_list = [X11, X10, X9, X8, X7, X6, X5, X4, X3, X2]
 
     window_length = 5
-    fig0, ax0 = plt.subplots(2,2,layout='constrained')
+    fig0, ax0 = plt.subplots(2,2,figsize=(7,2.625),layout='constrained')
     list_window_length = np.arange(1,51,1)
     linecolor_list0 = np.linspace(0.9,0.1,len(list_window_length))
 
@@ -118,16 +118,16 @@ if __name__ == '__main__':
             ax0[1,1].plot(index,cumsum_normalized,marker='o',markerfacecolor='none',markersize=2,zorder=len(list_window_length)-window_length,linestyle='-',rasterized=True,color=(0+float(linecolor_list0[idx]), 0, 1-float(linecolor_list0[idx])),label=f'$L={window_length}$')
    
     # ax0[0,0].set_xlabel(r'$i$', fontsize=9)
-    ax0[0,0].set_ylabel(r'Singular value $\sigma_i$', fontsize=9)
+    ax0[0,0].set_ylabel(r'Singular value $\sigma_i$')
     # ax0[0,1].set_xlabel(r'$r$', fontsize=9)
-    ax0[0,1].set_ylabel(r'Cumulative sum $\sum_{i=1}^r \sigma_i$', fontsize=9)
+    ax0[0,1].set_ylabel(r'Cumulative sum $\sum_{i=1}^r \sigma_i$')
 
-    ax0[1,0].set_xlabel(r'$i$', fontsize=9)
-    ax0[1,0].set_ylabel(r'Singular value $\sigma_i$', fontsize=9)
+    ax0[1,0].set_xlabel(r'$i$')
+    ax0[1,0].set_ylabel(r'Singular value $\sigma_i$')
     ax0[1,0].set_xlim(0,10.5)
     ax0[1,0].legend(framealpha=0.5,ncols=3,fontsize=4)
-    ax0[1,1].set_xlabel(r'$r$', fontsize=9)
-    ax0[1,1].set_ylabel(r'Cumulative sum $\sum_{i=1}^r \sigma_i$', fontsize=9)
+    ax0[1,1].set_xlabel(r'$r$')
+    ax0[1,1].set_ylabel(r'Cumulative sum $\sum_{i=1}^r \sigma_i$')
     ax0[1,1].set_xlim(0,10.5)
 
     """ Singular values for different missions """
@@ -147,10 +147,10 @@ if __name__ == '__main__':
             ax1[1].plot(index,cumsum_normalized,marker='o',markerfacecolor='none',markersize=2,linestyle='-',rasterized=True,color='0',label=r"DRM, $r_p=100$ km")
         
     ax1[0].legend(framealpha=0.5,fontsize=4)
-    ax1[0].set_xlabel(r'$i$', fontsize=9)
-    ax1[0].set_ylabel(r'Singular value $\sigma_i$', fontsize=9)
-    ax1[1].set_xlabel(r'$r$', fontsize=9)
-    ax1[1].set_ylabel(r'Cumulative sum $\sum_{i=1}^r \sigma_i$', fontsize=9)
+    ax1[0].set_xlabel(r'$i$')
+    ax1[0].set_ylabel(r'Singular value $\sigma_i$')
+    ax1[1].set_xlabel(r'$r$')
+    ax1[1].set_ylabel(r'Cumulative sum $\sum_{i=1}^r \sigma_i$')
     
     # plt.show()
     fig0.savefig('journal_plots/window_length_vs_singular_values.pdf', format='pdf')
