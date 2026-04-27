@@ -90,7 +90,7 @@ if __name__ == '__main__':
     inputdomain_list = [X11, X10, X9, X8, X7, X6, X5, X4, X3, X2]
 
     window_length = 5
-    fig0, ax0 = plt.subplots(2,2,figsize=(7,2.625),layout='constrained')
+    fig0, ax0 = plt.subplots(2,2,layout='constrained')
     list_window_length = np.arange(1,51,1)
     linecolor_list0 = np.linspace(0.9,0.1,len(list_window_length))
 
