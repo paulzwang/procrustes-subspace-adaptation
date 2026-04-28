@@ -60,7 +60,19 @@ if __name__ == '__main__':
     mission3_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=98.0\Results_ctrl=0_ra=12000_rp=98.0_hl=0.150_90.0deg.csv'
     mission4_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=97.0\Results_ctrl=0_ra=12000_rp=97.0_hl=0.150_90.0deg.csv'
     mission5_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=96.0\Results_ctrl=0_ra=12000_rp=96.0_hl=0.150_90.0deg.csv'
-    shift_list = [r'$r_p=96$ km', 
+    mission6_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=95.0\Results_ctrl=0_ra=12000_rp=95.0_hl=0.150_90.0deg.csv'
+    mission7_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=94.0\Results_ctrl=0_ra=12000_rp=94.0_hl=0.150_90.0deg.csv'
+    mission8_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=93.0\Results_ctrl=0_ra=12000_rp=93.0_hl=0.150_90.0deg.csv'
+    mission9_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=92.0\Results_ctrl=0_ra=12000_rp=92.0_hl=0.150_90.0deg.csv'
+    mission10_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=91.0\Results_ctrl=0_ra=12000_rp=91.0_hl=0.150_90.0deg.csv'
+    mission11_data_directory = r'data\periapsis_shift\4orbit_ra=12000_rp=90.0\Results_ctrl=0_ra=12000_rp=90.0_hl=0.150_90.0deg.csv'
+    shift_list = [r'$r_p=90$ km', 
+                  r'$r_p=91$ km', 
+                  r'$r_p=92$ km', 
+                  r'$r_p=93$ km', 
+                  r'$r_p=94$ km', 
+                  r'$r_p=95$ km', 
+                  r'$r_p=96$ km', 
                   r'$r_p=97$ km',
                   r'$r_p=98$ km',
                   r'$r_p=99$ km'] # Model training performed on descending shifts
@@ -71,16 +83,23 @@ if __name__ == '__main__':
     df3, t3, X3, Y3 = read_data(mission3_data_directory)
     df4, t4, X4, Y4 = read_data(mission4_data_directory)
     df5, t5, X5, Y5 = read_data(mission5_data_directory)
+    df6, t6, X6, Y6 = read_data(mission6_data_directory)
+    df7, t7, X7, Y7 = read_data(mission7_data_directory)
+    df8, t8, X8, Y8 = read_data(mission8_data_directory)
+    df9, t9, X9, Y9 = read_data(mission9_data_directory)
+    df10, t10, X10, Y10 = read_data(mission10_data_directory)
+    df11, t11, X11, Y11 = read_data(mission11_data_directory)
 
-    inputdomain_list = [X5, X4, X3, X2]
-    outputdomain_list = [Y5, Y4, Y3, Y2]
-    t_list = [t5, t4, t3, t2]
+    inputdomain_list = [X11, X10, X9, X8, X7, X6, X5, X4, X3, X2]
+    outputdomain_list = [Y11, Y10, Y9, Y8, Y7, Y6, Y5, Y4, Y3, Y2]
+    t_list = [t11, t10, t9, t8, t7, t6, t5, t4, t3, t2]
 
     #=======================================================================================#
     # Instantiate Plotting
     #=======================================================================================#
-    label_fontsize = 9
-    fig0, ax0 = plt.subplots(4,3,layout='constrained')
+    fig0, ax0 = plt.subplots(1,1,figsize=(3.25,2.75),layout='constrained')
+    # linecolor_list = np.linspace(0.8,0.1,len(inputdomain_list)) # Create an array of values to customize line color in RGB
+    linecolor_list = np.linspace(0.9,0.1,len(inputdomain_list)) # Create an array of values to customize line color in RGB
 
     #=======================================================================================#
     # Training Loop
@@ -92,7 +111,7 @@ if __name__ == '__main__':
         t_fromlist = t_list[i]
 
         # Specify up to which data point is seen by the model
-        list_percent_seen = np.arange(0.01,1.01,0.01)
+        list_percent_seen = np.arange(0.05,1.05,0.05)
         list_rmse_og = []
         list_rmse_da = []
         list_r2_og = []
@@ -222,26 +241,13 @@ if __name__ == '__main__':
         #=======================================================================================#
         # Plotting
         #=======================================================================================#
-        """ Subspace Distances, RMSE, and R2 """
+        """ RMSE vs percent data """
         list_percent_seen = 100*list_percent_seen
-        """ Plot only Mission 1-4"""
-        ax0[i,0].plot(list_percent_seen,np.array(list_unaligned_d)/np.array(list_numpoints),marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='maroon',label=r'Pre-adaptation $d/n$')
-        ax0[i,0].plot(list_percent_seen,np.array(list_aligned_d)/np.array(list_numpoints),marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='navy',label=r'Post-adaptation $d/n$')
-        ax0[i,1].plot(list_percent_seen,list_rmse_og,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='red',label='No adaptation')
-        ax0[i,1].plot(list_percent_seen,list_rmse_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='darkorchid',label='Domain adapted')
-        ax0[i,1].set_title(f'Mission {len(inputdomain_list) - i}: {shift_list[i]}')
-        ax0[i,2].plot(list_percent_seen,list_r2_og,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='red',label='No adaptation')
-        ax0[i,2].plot(list_percent_seen,list_r2_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='darkorchid',label='Domain adapted')
-        if i == len(inputdomain_list)-1:
-            ax0[i,0].legend(framealpha=0.5,fontsize=6.25)
-            ax0[i,0].set_xlabel('Percent Data Observed',fontsize=label_fontsize)
-            ax0[i,0].set_ylabel('Normalized\nSubspace Distance $d/n$',fontsize=label_fontsize)
-            ax0[i,1].legend(framealpha=0.5,fontsize=6.25)
-            ax0[i,1].set_xlabel('Percent Data Observed',fontsize=label_fontsize)
-            ax0[i,1].set_ylabel('RMSE',fontsize=label_fontsize)
-            ax0[i,2].set_xlabel('Percent Data Observed',fontsize=label_fontsize)
-            ax0[i,2].set_ylabel(r'R$^2$',fontsize=label_fontsize)
-            ax0[i,2].legend(framealpha=0.5,fontsize=6.25)
+        ax0.plot(list_percent_seen,list_r2_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color=(0+float(linecolor_list[i]), 0, 1-float(linecolor_list[i])),label=f'Mission {len(inputdomain_list) - i}: {shift_list[i]}')
 
+    ax0.legend(framealpha=0.5,fontsize=4)
+    ax0.set_xlabel('Percent Data Observed')
+    ax0.set_ylabel('R$^2$')
+        # ax1.plot(list_percent_seen,list_rmse_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color='darkorchid',label='Domain adapted')
 
     fig0.savefig('journal_plots/increasing_rp_shifts_online_metrics.pdf', format='pdf')
