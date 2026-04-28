@@ -243,7 +243,7 @@ if __name__ == '__main__':
         #=======================================================================================#
         """ RMSE vs percent data """
         list_percent_seen = 100*list_percent_seen
-        ax0.plot(list_percent_seen,list_r2_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color=(0+float(linecolor_list[i]), 0, 1-float(linecolor_list[i])),label=f'Mission {len(inputdomain_list) - i}: {shift_list[i]}')
+        ax0.plot(list_percent_seen,list_r2_da,marker='o',markerfacecolor='none',markersize=2,linestyle='-',color=(1-float(linecolor_list[i]), 0, 1),label=f'Mission {len(inputdomain_list) - i}: {shift_list[i]}')
 
     ax0.legend(framealpha=0.5,fontsize=4)
     ax0.set_xlabel('Percent Data Observed')
