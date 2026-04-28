@@ -146,4 +146,4 @@ if __name__ == '__main__':
     
     # plt.show()
     fig0.savefig('journal_plots/window_length_vs_singular_values.pdf', format='pdf')
-    # fig1.savefig('journal_plots/missions_vs_singular_values.pdf', format='pdf')
+    fig1.savefig('journal_plots/missions_vs_singular_values.pdf', format='pdf')
