@@ -172,7 +172,7 @@ if __name__ == '__main__':
             #=======================================================================================#
             # Define neural network hyperparameters
             num_layers = int(4)#int(4)
-            num_neurons = int(200)#int(200)
+            num_neurons = int(145)#int(200)
             hidden_sizes = [num_neurons] * num_layers
             learning_rate = 0.006
             num_epochs = 200 
