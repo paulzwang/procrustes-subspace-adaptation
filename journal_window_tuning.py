@@ -193,7 +193,7 @@ if __name__ == '__main__':
     ax6.set_ylabel('RMSE')
     # ax6.legend(framealpha=0.5,fontsize=6.25)
 
-    print(f"Mean RMSE values: {list_mean_rmse_og}")
+    print(f"Mean RMSE values: {list_mean_rmse_da}")
     print(f"3sigma on RMSE values: {list_std_rmse_da}")
     print(f"Mean R2 values: {list_mean_r2_da}")
     print(f"3sigma on R2 values: {list_std_r2_da}")
