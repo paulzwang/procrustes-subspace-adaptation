@@ -77,7 +77,7 @@ if __name__ == '__main__':
     fig0, ax0 = plt.subplots(4,1,layout='constrained') # time series visualization
     fig1, ax1 = plt.subplots(4,4,layout='constrained') # actual vs predicted and heat rate vs. time
     plt.subplots_adjust(wspace=0.1)
-    fig2, ax2 = plt.subplots(1,3,figsize=(7,2.75),layout='constrained') # state space visualization
+    fig2, ax2 = plt.subplots(1,3,figsize=(7,2),layout='constrained') # state space visualization
     fig5, ax5 = plt.subplots(4,2,subplot_kw=dict(projection='3d'),figsize=(3.25,5.5),layout='constrained') # manifolds part 2
     fig6, ax6 = plt.subplots(1,3,figsize=(7,2),layout='constrained') # subspace distances vs mission number
 
