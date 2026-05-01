@@ -125,7 +125,7 @@ if __name__ == '__main__':
             #=======================================================================================#
             # Partition data into streamed and unseen data
             #=======================================================================================#
-            data_dict = partition_data(percent_seen=percent_seen,t1=t1,X1=X1,Y1=Y1,t2=t2,X2=X2,Y2=Y2)
+            data_dict = partition_data(percent_seen=percent_seen,t1=t1,X1=X1,Y1=Y1,t2=t_fromlist,X2=X_fromlist,Y2=Y_fromlist)
             t1_seen = data_dict['t1_seen']
             t1_unseen = data_dict['t1_unseen']
             X1_seen = data_dict['X1_seen']
