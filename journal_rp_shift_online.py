@@ -144,7 +144,7 @@ if __name__ == '__main__':
             #=======================================================================================#
             # Xa, Za are derived from partially observed X1 and X_fromlist. Ys and Yt are Hankelised, partially observed Y1 and Y_fromlist
             L = 5
-            if i >= 2:
+            if i >= 8:
                 """ For r_p == 99 km and r_p == 98 km, use removal correpondence method """
                 Xa, Za, Ys, Yt, Hx_proj, Hz_proj, Hx_proj_aligned, Hz_sub = psa.streaming_procrustes_subspace_adaptation(X1_seen,X2_seen,Y1_seen,Y2_seen,t1_seen,t2_seen,
                                                                                     window_length=L,k=5,interptype='removal',manifold_visual=False)
