@@ -214,14 +214,14 @@ if __name__ == '__main__':
 
             ax5[i-6,0].scatter(Hx_proj[0,:],Hx_proj[1,:],Hx_proj[2,:],s=2,marker='.',c=scolors,cmap='viridis',label='$H_{X,\mathrm{proj}}$',rasterized=True,depthshade=False)
             ax5[i-6,0].scatter(Hz_proj[0,:],Hz_proj[1,:],Hz_proj[2,:],s=2,marker='.',c=tcolors,cmap='plasma',label='$H_{Z,\mathrm{proj}}$',rasterized=True,depthshade=False)
-            ax5[i-6,0].legend(title=f'Mission {10-i},\nunaligned manifolds', title_fontsize=4, loc='upper left',framealpha=0.5,fontsize=4)
+            ax5[i-6,0].legend(title=f'Mission {10-i},\nunaligned manifolds', title_fontsize=6, loc='upper left',framealpha=0.5,fontsize=4)
             ax5[i-6,0].tick_params(pad=-3)
 
             scolors = Xa[:,2] #np.linspace(0,Xa.shape[0],num=Xa.shape[0])
             tcolors = Za[:,2] #np.linspace(0,Za.shape[0],num=Za.shape[0])
             ax5[i-6,1].scatter(Xa[:,0],Xa[:,1],Xa[:,2],s=2,marker='.',c=scolors,cmap='viridis',label='$X_a$',rasterized=True,depthshade=False)
             ax5[i-6,1].scatter(Za[:,0],Za[:,1],Za[:,2],s=2,marker='.',c=tcolors,cmap='plasma',label='$Z_a$',rasterized=True,depthshade=False)
-            ax5[i-6,1].legend(title=f'Mission {10-i},\naligned manifolds', title_fontsize=4, loc='upper left',framealpha=0.5,fontsize=4)
+            ax5[i-6,1].legend(title=f'Mission {10-i},\naligned manifolds', title_fontsize=6, loc='upper left',framealpha=0.5,fontsize=4)
             ax5[i-6,1].tick_params(pad=-3)
 
 
